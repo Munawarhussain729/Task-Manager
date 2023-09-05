@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import ListSection from './ListSection'
+import DropDown from './DropDown';
 
 function ListTasks({ tasks, setTasks }) {
     const [todos, setTodos] = useState([])
     const [inProgress, setInProgress] = useState([])
     const [closed, setclosed] = useState([])
-  
+    const [isSidebarVisible, setSidebarVisible] = useState(false)
+    const [dateValue, setDateValue] = useState(new Date());
+    const [priority, setPriority] = useState('')
+
+    const handleDateChange = newValue => {
+        setDateValue(newValue);
+    };
 
     useEffect(() => {
         const tempTodos = tasks?.filter((item) => item?.status === "toDo")
@@ -18,22 +25,51 @@ function ListTasks({ tasks, setTasks }) {
 
     const status = ['toDo', 'inProgress', 'closed']
     return (
-        <div className='flex gap-16'>
-            {status.map((item, index) => (
-                <ListSection
-                    key={index}
-                    status={item}
-                    todos={todos}
-                    inProgress={inProgress}
-                    closed={closed}
-                    setTodos={setTodos}
-                    setInProgress={setInProgress}
-                    setclosed={setclosed}
-                    tasks={tasks}
-                    setTasks={setTasks}
-                />
-            ))}
-        </div>
+        <>
+            <div className='flex gap-16'>
+                {status.map((item, index) => (
+                    <ListSection
+                        key={index}
+                        status={item}
+                        todos={todos}
+                        inProgress={inProgress}
+                        closed={closed}
+                        setTodos={setTodos}
+                        setInProgress={setInProgress}
+                        setclosed={setclosed}
+                        tasks={tasks}
+                        setTasks={setTasks}
+                        setSidebarVisible={setSidebarVisible}
+                    />
+                ))}
+            </div>
+
+            <div className={`bg-slate-300 p-5  min-h-screen absolute rounded-xl text-black right-0 ${isSidebarVisible ? "w-[45rem] visible" : "w-0 invisible "} overflow-x-hidden transition-all duration-300 ease-in-out`}>
+                <button className=" top-2 right-2" onClick={() => { setSidebarVisible(!isSidebarVisible) }}>
+                    {isSidebarVisible ? "Hide" : "Show"} Sidebar
+                </button>
+                <hr className='h-1 my-3 bg-slate-400' />
+                <h2 className='text-3xl'>Title</h2>
+                <div className='grid grid-cols-1 md:grid-cols-2'>
+                    <div className='grid grid-cols-1 md:grid-cols-2'>
+                        <p>Assign:</p>
+                        <div>
+                            <p>Person name</p>
+                        </div>
+                    </div>
+                    <div className='grid grid-cols-1 md:grid-cols-2'>
+                        <p>Due Date:</p>
+                        <input type='date' onChange={() => handleDateChange} className='py-1 px-2 rounded-lg' />
+                    </div>
+                </div>
+                <div className='max-w-[12rem] my-3'>
+                    <DropDown value={priority} setValue={setPriority} options={['High', 'medium', 'low']} label={'Select Task priority'} />
+                </div>
+
+            </div>
+
+
+        </>
     )
 }
 

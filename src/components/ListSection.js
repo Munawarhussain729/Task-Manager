@@ -1,10 +1,12 @@
 import { useDrop } from "react-dnd"
 import Task from "./Task"
 
-const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgress, setclosed, setTasks, tasks }) => {
+
+const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgress, setclosed, setTasks, tasks, setSidebarVisible }) => {
     let text = "ToDo"
     let background = "bg-slate-500"
     let tasksToMap = todos
+
     const addItemToSection = (id) => {
         setTasks((prev) => {
             const mTasks = prev.map((t) => {
@@ -37,16 +39,21 @@ const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgres
     }
 
     return (
-        <div ref={drop} className={`w-64 rounded-md p-2 ${isOver ? "bg-slate-500" : ""}`}>
-            <Header text={text} background={background} count={tasksToMap?.length} />
-            {
-                tasksToMap?.length > 0 && (
-                    tasksToMap.map((task) => (
-                        <Task key={task.id} task={task} tasks={tasks} setTasks={setTasks} />
-                    ))
-                )
-            }
-        </div>
+        <>
+            <div ref={drop} className={`w-80 rounded-md p-2 ${isOver ? "bg-slate-500" : ""}`}>
+                <Header text={text} background={background} count={tasksToMap?.length} />
+                {
+                    tasksToMap?.length > 0 && (
+                        tasksToMap.map((task, index) => (
+                            <div key={index} onClick={()=>setSidebarVisible(true)}>
+                                <Task key={task.id} task={task} tasks={tasks} setTasks={setTasks} />
+                            </div>
+                        ))
+                    )
+                }
+            </div>
+
+        </>
     )
 }
 
