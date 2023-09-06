@@ -6,11 +6,33 @@ const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgres
     let text = "ToDo"
     let background = "bg-slate-500"
     let tasksToMap = todos
+    const UpdateItemPriority = async (taskId, taskStatus) => {
+        try {
+            const response =
+                await fetch('http://localhost:8080/task/udpate-status',
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ _id: taskId, status: taskStatus }),
+                    },
+                )
 
+            const data = await response.json();
+            console.log("Got the response ", data);
+        } catch (error) {
+            console.log("Found an error ", error);
+        }
+
+    }
     const addItemToSection = (id) => {
+        console.log("Task Id is ", id);
+
         setTasks((prev) => {
             const mTasks = prev.map((t) => {
-                if (t.id === id) {
+                if (t._id === id) {
+                    UpdateItemPriority(id, status)
                     return { ...t, status, status: status }
                 }
                 return t
@@ -18,10 +40,11 @@ const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgres
             localStorage.setItem('tasks', JSON.stringify(mTasks))
             return mTasks
         })
+
     }
     const [{ isOver }, drop] = useDrop(() => ({
         accept: "task",
-        drop: (item) => addItemToSection(item.id),
+        drop: (item) => addItemToSection(item._id),
         collect: (monitor) => ({
             isOver: !!monitor.isOver()
         })
@@ -45,7 +68,7 @@ const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgres
                 {
                     tasksToMap?.length > 0 && (
                         tasksToMap.map((task, index) => (
-                            <div key={index} onClick={()=>setSidebarVisible(true)}>
+                            <div key={index} onClick={() => setSidebarVisible(true)}>
                                 <Task key={task.id} task={task} tasks={tasks} setTasks={setTasks} />
                             </div>
                         ))

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 function Task({ task, tasks, setTasks }) {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "task",
-        item: { id: task.id },
+        item: { _id: task._id },
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging()
         })
