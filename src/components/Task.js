@@ -20,7 +20,7 @@ function Task({ task, tasks, setTasks }) {
     return (
         <div ref={drag} className={`relative p-4 mt-8  shadow-md cursor-grab bg-slate-300 rounded-md text-black ${isDragging ? 'opacity-25' : 'opacity-100'}`}>
             <div className='flex justify-between'>
-                <h1 className='text-lg'>{task.name}</h1>
+                <h1 className='text-lg'>{task?.title}</h1>
                 <IoMdRemoveCircleOutline color='black' className='cursor-pointer' size={20} onClick={() => { handleRemove(task.id) }} />
             </div>
         </div>

@@ -8,12 +8,28 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 function TasksHome() {
   const [tasks, setTasks] = useState([])
 
-  useEffect(() => {
-    if (!!localStorage.getItem('tasks')) {
-      setTasks(JSON.parse(localStorage.getItem('tasks')))
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!!localStorage.getItem('tasks')) {
+  //     setTasks(JSON.parse(localStorage.getItem('tasks')))
+  //   }
+  // }, [])
 
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const response = await fetch('http://localhost:8080/task/get-tasks', {
+        method: 'GET',
+      });
+      if (response.ok) {
+        const data = await response.json(); // Parse the response body as JSON
+        setTasks(data?.allTasks)
+        console.log("API response is ", data);
+      } else {
+        console.error("API request failed with status", response.status);
+      }
+      // console.log("API response is ", response);
+    }
+    fetchTasks()
+  }, [])
 
   return (
     <DndProvider backend={HTML5Backend}>
