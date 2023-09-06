@@ -7,12 +7,33 @@ function CreateTask({ tasks, setTasks }) {
         name: "",
         status: "toDo"
     })
+
+    const handleCreateTask = async (taskTitle) => {
+        try {
+            const response =
+                await fetch('http://localhost:8080/task/create-task',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ title: taskTitle }),
+                    },
+                )
+            console.log("Got the response ", response);
+        } catch (error) {
+            console.log("Found an error ", error);
+        }
+
+    }
+
     const handleOnSubmit = (e) => {
         e.preventDefault();
         if (task?.name?.length < 3) {
             toast.error("Ticket length should be greater then 3 character")
             return
         }
+        handleCreateTask(task?.name)
         setTasks((prev) => {
             const list = [...prev, task]
             localStorage.setItem('tasks', JSON.stringify(list))
