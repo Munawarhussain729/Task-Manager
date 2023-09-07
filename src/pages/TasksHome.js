@@ -26,7 +26,6 @@ function TasksHome() {
       } else {
         console.error("API request failed with status", response.status);
       }
-      // console.log("API response is ", response);
     }
     fetchTasks()
   }, [])

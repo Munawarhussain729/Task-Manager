@@ -14,7 +14,7 @@ function DropDown({ value, setValue, options, label }) {
 
     return (
         <div>
-            <Box sx={{ minWidth: 120 }}>
+            <Box sx={{ minWidth: 120, width:'100%' }}>
                 <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">{label}</InputLabel>
                     <Select
@@ -23,7 +23,7 @@ function DropDown({ value, setValue, options, label }) {
                         value={value }
                         label={label}
                         onChange={handleChange}
-                        className="text-black focus:text-slate-400 focus:ring-slate-400"
+                        className="text-black focus:text-slate-400 focus:ring-slate-400 bg-slate-100 rounded-xl"
                     >
                         {options?.map((item, index) => (
                             <MenuItem value={item} key={index}  >{item}</MenuItem>

@@ -2,7 +2,7 @@ import { useDrop } from "react-dnd"
 import Task from "./Task"
 
 
-const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgress, setclosed, setTasks, tasks, setSidebarVisible }) => {
+const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgress, setclosed, setTasks, tasks, setSelectedTask }) => {
     let text = "ToDo"
     let background = "bg-slate-500"
     let tasksToMap = todos
@@ -68,7 +68,7 @@ const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgres
                 {
                     tasksToMap?.length > 0 && (
                         tasksToMap.map((task, index) => (
-                            <div key={index} onClick={() => setSidebarVisible(true)}>
+                            <div key={index} onClick={() => setSelectedTask(task)}>
                                 <Task key={task.id} task={task} tasks={tasks} setTasks={setTasks} />
                             </div>
                         ))
