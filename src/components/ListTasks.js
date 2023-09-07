@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import ListSection from './ListSection'
 import DropDown from './DropDown';
+import { MdCancel } from 'react-icons/md'
 
 function ListTasks({ tasks, setTasks }) {
     const [todos, setTodos] = useState([])
@@ -79,8 +80,6 @@ function ListTasks({ tasks, setTasks }) {
             if (!response.ok) {
                 throw new Error(`Request failed with status ${response.status}`);
             }
-            const data = await response.json()
-            console.log("Object updated ", data);
         } catch (error) {
             console.log("unable to update: ", error);
         }
@@ -111,7 +110,12 @@ function ListTasks({ tasks, setTasks }) {
                 className={`bg-slate-300 p-5  min-h-screen absolute rounded-xl text-black right-0 
             ${selectedTask ? "w-[45rem] visible" : "w-0 invisible "} overflow-x-hidden transition-all 
             duration-300 ease-in-out `}>
-                <h1 className='text-3xl'>{selectedTask?.title}</h1>
+                <div className='flex items-center justify-between'>
+                    <h1 className='text-3xl'>{selectedTask?.title}</h1>
+                    <MdCancel size={30}
+                        className='cursor-pointer'
+                        onClick={() => { setSelectedTask(null) }} />
+                </div>
                 <hr className='h-1 my-3 bg-slate-400' />
                 <div className='flex items-center flex-wrap w-full md:w-1/2 my-5'>
                     <p className='m-0 md:mr-10'>Assign:</p>
@@ -144,7 +148,9 @@ function ListTasks({ tasks, setTasks }) {
                         rows={3} />
                 </div>
                 <hr className='h-1 my-3 bg-slate-400' />
-                <button className=" top-2 right-2 p-2 bg-gray-50 hover:bg-gray-600 hover:text-white w-40 rounded-lg" onClick={() => { handleSaveClick(selectedTask._id) }}>
+                <button 
+                className=" top-2 right-2 p-2 bg-gray-50 hover:bg-gray-600 hover:text-white w-40 rounded-lg cursor-pointer" 
+                onClick={() => { handleSaveClick(selectedTask._id) }}>
                     Save Task
                 </button>
             </div>
