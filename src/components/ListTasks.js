@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import ListSection from './ListSection'
 import DropDown from './DropDown';
 
@@ -6,7 +6,6 @@ function ListTasks({ tasks, setTasks }) {
     const [todos, setTodos] = useState([])
     const [inProgress, setInProgress] = useState([])
     const [closed, setclosed] = useState([])
-    const [isSidebarVisible, setSidebarVisible] = useState(false)
     const [dateValue, setDateValue] = useState(new Date());
     const [priority, setPriority] = useState('')
     const [description, setDescription] = useState('')
@@ -15,17 +14,14 @@ function ListTasks({ tasks, setTasks }) {
     const textAreaRef = useRef(null)
 
     const handleDateChange = newValue => {
-        console.log("New value ", newValue);
         setDateValue(newValue);
     };
 
     const convertDateFormat = (oldFormat) => {
         const originalDate = new Date(oldFormat);
-
         const year = originalDate.getFullYear();
         const month = String(originalDate.getMonth() + 1).padStart(2, '0');
         const day = String(originalDate.getDate()).padStart(2, '0');
-
         const newDateStr = `${year}-${month}-${day}`;
         return newDateStr
     }
@@ -40,9 +36,56 @@ function ListTasks({ tasks, setTasks }) {
     }, [tasks])
 
     useEffect(() => {
-        textAreaRef.current.style.height = "auto"
-        textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px"
+        textAreaRef.current.style.height = "auto";
+        const scrollHeight = textAreaRef.current.scrollHeight;
+        const maxHeight = 200;
+
+        if (scrollHeight > maxHeight) {
+            textAreaRef.current.style.height = `${maxHeight}px`;
+        } else {
+            textAreaRef.current.style.height = `${scrollHeight}px`;
+        }
     }, [description])
+
+    useEffect(() => {
+        if (!!selectedTask) {
+            setDescription(selectedTask.description)
+            setAssignPerson(selectedTask.assignedTo)
+            setPriority(selectedTask.priority)
+            setDateValue(convertDateFormat(selectedTask.dueDate))
+            if (textAreaRef.current) {
+                textAreaRef.current.style.height = "auto";
+            }
+        }
+    }, [selectedTask])
+
+    const handleSaveClick = async (taskId) => {
+        try {
+            const detailObject = {
+                assignedTo: assignPerson,
+                dueDate: dateValue,
+                priority: priority,
+                description: description
+            }
+            setSelectedTask(null)
+            const response = await fetch('http://localhost:8080/task/update-task',
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ _id: taskId, details: detailObject })
+                })
+            if (!response.ok) {
+                throw new Error(`Request failed with status ${response.status}`);
+            }
+            const data = await response.json()
+            console.log("Object updated ", data);
+        } catch (error) {
+            console.log("unable to update: ", error);
+        }
+    }
+
     const status = ['toDo', 'inProgress', 'closed']
     return (
         <>
@@ -68,35 +111,42 @@ function ListTasks({ tasks, setTasks }) {
                 className={`bg-slate-300 p-5  min-h-screen absolute rounded-xl text-black right-0 
             ${selectedTask ? "w-[45rem] visible" : "w-0 invisible "} overflow-x-hidden transition-all 
             duration-300 ease-in-out `}>
-                <button className=" top-2 right-2 p-2 bg-gray-50 hover:bg-gray-600 hover:text-white w-40 rounded-lg" onClick={() => { setSelectedTask(null) }}>
-                    Save Task
-                </button>
+                <h1 className='text-3xl'>{selectedTask?.title}</h1>
                 <hr className='h-1 my-3 bg-slate-400' />
-                <h2 className='text-3xl'>Title</h2>
-                <div className='grid grid-cols-1 md:grid-cols-2'>
-                    <div className='flex items-center flex-wrap'>
-                        <p className='m-0 md:pr-5'>Assign:</p>
-                        <div className='flex-1 mx-3'>
-                            <DropDown value={assignPerson} setValue={setAssignPerson} options={['User1', 'User2', 'User3']} label={selectedTask?.assignedTo || 'Select Person'} />
-                        </div>
-                    </div>
-                    <div className='grid grid-cols-1 md:grid-cols-2'>
-                        <p>Due Date:</p>
-                        <input type='date' value={selectedTask ? convertDateFormat(selectedTask.dueDate) : dateValue} onChange={(e) => handleDateChange(e.target.value)} className='py-1 px-2 rounded-lg' />
+                <div className='flex items-center flex-wrap w-full md:w-1/2 my-5'>
+                    <p className='m-0 md:mr-10'>Assign:</p>
+                    <div className='flex-1 mx-3'>
+                        <DropDown value={assignPerson} setValue={setAssignPerson} options={['User1', 'User2', 'User3', 'User4']} label={'Select Person'} />
                     </div>
                 </div>
-                <div className='max-w-[12rem] my-3'>
-                    <DropDown value={selectedTask?.priority || priority} setValue={setPriority} options={['High', 'medium', 'low']} label={'Select Task priority'} />
+                <div className='flex items-center flex-wrap w-full md:w-1/2 my-5'>
+                    <p className='m-0 md:mr-10'>Due Date:</p>
+                    <input
+                        type='date'
+                        value={dateValue}
+                        onChange={(e) => handleDateChange(e.target.value)}
+                        className='p-3 rounded-lg' />
+                </div>
+
+                <div className='flex items-center flex-wrap w-full md:w-1/2 my-5'>
+                    <p className='m-0 md:mr-4'>Task priority:</p>
+                    <div className='flex-1'>
+                        <DropDown value={priority} setValue={setPriority} options={['High', 'medium', 'low']} label={'Select Task priority'} />
+                    </div>
                 </div>
                 <div >
-                    <h3>Description:</h3>
+                    <h3 className='my-3'>Description:</h3>
                     <textarea
-                        value={selectedTask?.description || description}
+                        value={description}
                         onChange={(e) => { setDescription(e.target.value) }}
                         ref={textAreaRef}
                         className='p-2 w-full rounded-lg focus:outline-gray-400'
                         rows={3} />
                 </div>
+                <hr className='h-1 my-3 bg-slate-400' />
+                <button className=" top-2 right-2 p-2 bg-gray-50 hover:bg-gray-600 hover:text-white w-40 rounded-lg" onClick={() => { handleSaveClick(selectedTask._id) }}>
+                    Save Task
+                </button>
             </div>
 
 
