@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid'
 function CreateTask({ tasks, setTasks }) {
     const [task, setTask] = useState({
@@ -20,7 +20,10 @@ function CreateTask({ tasks, setTasks }) {
                         body: JSON.stringify({ title: taskTitle }),
                     },
                 )
-            console.log("Got the response ", response);
+            if (!response.ok) {
+                const data = response.json();
+                toast.error(data?.message)
+            }
         } catch (error) {
             console.log("Found an error ", error);
         }
@@ -44,7 +47,6 @@ function CreateTask({ tasks, setTasks }) {
     }
     return (
         <div className='container'>
-            <ToastContainer />
             <form
                 onSubmit={handleOnSubmit}
                 className='flex items-center justify-center'>

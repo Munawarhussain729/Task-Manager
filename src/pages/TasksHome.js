@@ -4,6 +4,7 @@ import ListTasks from '@/components/ListTasks'
 import React, { useEffect, useState } from 'react'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { toast } from 'react-toastify';
 
 function TasksHome() {
   const [tasks, setTasks] = useState([])
@@ -24,6 +25,8 @@ function TasksHome() {
         setTasks(data?.allTasks)
         console.log("API response is ", data);
       } else {
+        const data = response.json();
+        toast.error(data?.message)
         console.error("API request failed with status", response.status);
       }
     }

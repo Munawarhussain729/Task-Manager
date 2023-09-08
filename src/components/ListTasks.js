@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import ListSection from './ListSection'
 import DropDown from './DropDown';
 import { MdCancel } from 'react-icons/md'
+import { toast } from 'react-toastify';
 
 function ListTasks({ tasks, setTasks }) {
     const [todos, setTodos] = useState([])
@@ -78,7 +79,8 @@ function ListTasks({ tasks, setTasks }) {
                     body: JSON.stringify({ _id: taskId, details: detailObject })
                 })
             if (!response.ok) {
-                throw new Error(`Request failed with status ${response.status}`);
+                const data = response.json();
+                toast.error(data?.message)
             }
         } catch (error) {
             console.log("unable to update: ", error);
@@ -148,9 +150,9 @@ function ListTasks({ tasks, setTasks }) {
                         rows={3} />
                 </div>
                 <hr className='h-1 my-3 bg-slate-400' />
-                <button 
-                className=" top-2 right-2 p-2 bg-gray-50 hover:bg-gray-600 hover:text-white w-40 rounded-lg cursor-pointer" 
-                onClick={() => { handleSaveClick(selectedTask._id) }}>
+                <button
+                    className=" top-2 right-2 p-2 bg-gray-50 hover:bg-gray-600 hover:text-white w-40 rounded-lg cursor-pointer"
+                    onClick={() => { handleSaveClick(selectedTask._id) }}>
                     Save Task
                 </button>
             </div>

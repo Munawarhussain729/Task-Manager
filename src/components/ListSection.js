@@ -1,5 +1,6 @@
 import { useDrop } from "react-dnd"
 import Task from "./Task"
+import { toast } from "react-toastify"
 
 
 const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgress, setclosed, setTasks, tasks, setSelectedTask }) => {
@@ -20,7 +21,10 @@ const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgres
                 )
 
             const data = await response.json();
-            console.log("Got the response ", data);
+            if (!response.ok) {
+                const data = response.json();
+                toast.error(data?.message)
+            }
         } catch (error) {
             console.log("Found an error ", error);
         }
