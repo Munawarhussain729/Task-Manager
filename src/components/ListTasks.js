@@ -109,7 +109,7 @@ function ListTasks({ tasks, setTasks }) {
             </div>
 
             <div
-                className={`bg-slate-300 p-5  min-h-screen absolute rounded-xl text-black right-0 
+                className={`bg-slate-300 p-5  absolute rounded-xl text-black right-0 
             ${selectedTask ? "w-[45rem] visible" : "w-0 invisible "} overflow-x-hidden transition-all 
             duration-300 ease-in-out `}>
                 <div className='flex items-center justify-between'>

@@ -1,10 +1,10 @@
 import TasksHome from '@/pages/TasksHome'
 import React from 'react'
 
-function page({children}) {
+function page() {
     return (
         <div>
-            {children}
+            <TasksHome />
         </div>
     )
 }

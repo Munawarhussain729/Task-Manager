@@ -24,6 +24,10 @@ function CreateTask({ tasks, setTasks }) {
                 const data = response.json();
                 toast.error(data?.message)
             }
+            else{
+                window.location.reload()
+                toast.success('Task created successfully')
+            }
         } catch (error) {
             console.log("Found an error ", error);
         }
@@ -39,7 +43,6 @@ function CreateTask({ tasks, setTasks }) {
         handleCreateTask(task?.name)
         setTasks((prev) => {
             const list = [...prev, task]
-            localStorage.setItem('tasks', JSON.stringify(list))
             toast.success("Toast created");
             return list
         })

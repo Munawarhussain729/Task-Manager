@@ -35,7 +35,7 @@ function TasksHome() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className='w-screen min-h-screen flex flex-col items-center bg-gray-700 text-white'>
+      <div className='w-full rounded-lg min-h-[90vh] flex flex-col items-center bg-gray-700 text-white'>
         <CreateTask tasks={tasks} setTasks={setTasks} />
         <ListTasks tasks={tasks} setTasks={setTasks} />
       </div>
