@@ -43,6 +43,7 @@ function CreateTask({ tasks, setTasks }) {
         handleCreateTask(task?.name)
         setTasks((prev) => {
             const list = [...prev, task]
+            localStorage.setItem('tasks', JSON.stringify(list))
             toast.success("Toast created");
             return list
         })

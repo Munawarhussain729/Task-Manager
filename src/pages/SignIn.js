@@ -36,7 +36,11 @@ function SignIn() {
                 console.log("Response is ", data.message);
                 toast.error(data.message)
             } else {
+                const data = await response.json()
+                console.log("Data is ", data);
                 toast.success("User login Successful")
+                router.push('/dashboard/home')
+                localStorage.setItem('userProfile', JSON.stringify(data?.userProfile))
             }
         } catch (error) {
             toast.error(error?.message)

@@ -34,11 +34,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:last-child td, &:last-child th': {
         border: 0,
     },
+    '& td, & th': {
+        textTransform: 'capitalize', // Capitalize text
+    },
 }));
 
 function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
+const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+};
+
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -48,27 +56,28 @@ const rows = [
     createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
-export default function MU_Table() {
+export default function MU_Table({myTasks}) {
+
     return (
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
                     <TableRow>
                         <StyledTableCell>Task</StyledTableCell>
-                        <StyledTableCell align="right">Project Name</StyledTableCell>
+                        <StyledTableCell align="right">Status</StyledTableCell>
                         <StyledTableCell align="right">Deadline</StyledTableCell>
                         <StyledTableCell align="right">Priority</StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
-                        <StyledTableRow key={row.name}>
+                    {myTasks?.map((row) => (
+                        <StyledTableRow key={row.title}>
                             <StyledTableCell component="th" scope="row">
-                                {row.name}
+                                {row.title}
                             </StyledTableCell>
-                            <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                            <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                            <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+                            <StyledTableCell align="right">{row.status}</StyledTableCell>
+                            <StyledTableCell align="right">{formatDate(row.dueDate)}</StyledTableCell>
+                            <StyledTableCell align="right">{row.priority}</StyledTableCell>
                         </StyledTableRow>
                     ))}
                 </TableBody>

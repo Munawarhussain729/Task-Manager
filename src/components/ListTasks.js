@@ -8,6 +8,7 @@ function ListTasks({ tasks, setTasks }) {
     const [todos, setTodos] = useState([])
     const [inProgress, setInProgress] = useState([])
     const [closed, setclosed] = useState([])
+    const [allUsers, setAllUsers] = useState([])
     const [dateValue, setDateValue] = useState(new Date());
     const [priority, setPriority] = useState('')
     const [description, setDescription] = useState('')
@@ -61,6 +62,19 @@ function ListTasks({ tasks, setTasks }) {
         }
     }, [selectedTask])
 
+    useEffect(() => {
+        const getAllUsers = async () => {
+            const response = await fetch('http://localhost:8080/user/users', { method: 'GET' })
+            if (!response.ok) {
+                toast.error("unable to fetch all users")
+            } else {
+                const data = await response.json()
+                setAllUsers(data?.users)
+            }
+        }
+        getAllUsers()
+    }, [])
+
     const handleSaveClick = async (taskId) => {
         try {
             const detailObject = {
@@ -109,7 +123,7 @@ function ListTasks({ tasks, setTasks }) {
             </div>
 
             <div
-                className={`bg-slate-300 p-5  absolute rounded-xl text-black right-0 
+                className={`bg-slate-300 p-5 h-[90vh]  absolute rounded-xl text-black right-0 
             ${selectedTask ? "w-[45rem] visible" : "w-0 invisible "} overflow-x-hidden transition-all 
             duration-300 ease-in-out `}>
                 <div className='flex items-center justify-between'>
@@ -122,7 +136,7 @@ function ListTasks({ tasks, setTasks }) {
                 <div className='flex items-center flex-wrap w-full md:w-1/2 my-5'>
                     <p className='m-0 md:mr-10'>Assign:</p>
                     <div className='flex-1 mx-3'>
-                        <DropDown value={assignPerson} setValue={setAssignPerson} options={['User1', 'User2', 'User3', 'User4']} label={'Select Person'} />
+                        <DropDown value={assignPerson} setValue={setAssignPerson} Useroptions={allUsers} label={'Select Person'} />
                     </div>
                 </div>
                 <div className='flex items-center flex-wrap w-full md:w-1/2 my-5'>

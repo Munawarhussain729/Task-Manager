@@ -1,7 +1,18 @@
+
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ProfileImage from '../../public/transparent_profile_photo.webp'
 function Navbar({showSideBar, setSideBar}) {
+    const [name, setName] = useState('');
+
+    useEffect(() => {
+        const profile = localStorage.getItem('userProfile');
+        if (profile) {
+            const parsedProfile = JSON.parse(profile);
+            setName(parsedProfile.name);
+        }
+
+    }, []);
     return (
         <div>
             <nav className="bg-slate-900 h-[9vh]">
@@ -17,7 +28,7 @@ function Navbar({showSideBar, setSideBar}) {
 
                     <div className="flex items-center" >
                         <Image src={ProfileImage} width={50} height={50} alt='username' className='rounded-full bg-cover' />
-                        <h1 className='ml-5 text-xl font-semibold text-white'>User Name</h1>
+                        <h1 className='ml-5 text-xl font-semibold text-white'>{name}</h1>
                     </div>
                 </div>
             </nav>

@@ -6,9 +6,10 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 
-function DropDown({ value, setValue, options, label }) {
+function DropDown({ value, setValue, options, label, Useroptions }) {
 
     const handleChange = (event) => {
+        console.log("value is ", event.target.value);
         setValue(event.target.value);
     };
 
@@ -25,9 +26,13 @@ function DropDown({ value, setValue, options, label }) {
                         onChange={handleChange}
                         className="text-black focus:text-slate-400 focus:ring-slate-400 bg-slate-100 rounded-xl"
                     >
-                        {options?.map((item, index) => (
-                            <MenuItem value={item} key={index}  >{item}</MenuItem>
-                        ))}
+                        {Useroptions ?
+                            (Useroptions.map((item, index) => (
+                            <MenuItem value={item._id} key={index}  >{item.name}</MenuItem>
+                         ))) :
+                            (options?.map((item, index) => (
+                                <MenuItem value={item} key={index}  >{item}</MenuItem>
+                            )))}
                     </Select>
                 </FormControl>
             </Box>
