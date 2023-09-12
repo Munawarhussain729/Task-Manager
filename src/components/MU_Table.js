@@ -10,24 +10,28 @@ import Paper from '@mui/material/Paper';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: '#334155', 
+        backgroundColor: '#1e293b', 
         color: theme.palette.common.white,
+        fontSize: 17,
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
+        fontSize: 15,
     },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
+        backgroundColor: '#cbd5e1',
         '&:hover': {
-            backgroundColor: '#cbd5e1',
+            backgroundColor: '#94a3b8',
+            color:'#f8fafc'
         },
     },
     '&:nth-of-type(even)': {
+        backgroundColor:'#e2e8f0',
         '&:hover': {
-            backgroundColor: '#cbd5e1',
+            backgroundColor: '#94a3b8',
+            color:'#f8fafc',
         },
     },
     // hide last border
@@ -37,24 +41,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '& td, & th': {
         textTransform: 'capitalize', // Capitalize text
     },
+   
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
+
 const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
 };
-
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 export default function MU_Table({myTasks}) {
 

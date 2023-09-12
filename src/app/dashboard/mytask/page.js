@@ -1,30 +1,35 @@
 'use client'
 import MU_Table from '@/components/MU_Table'
+import Spinner from '@/components/Spinner';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 
 function page() {
     const [myTasks, setMyTasks] = useState([])
-    useEffect(async () => {
-        const profile = localStorage.getItem('userProfile');
-        if (profile) {
+    useEffect(() => {
+        const fetchMyTasks = async () => {
             const parsedProfile = JSON.parse(profile);
             const response = await fetch(`http://localhost:8080/user/my-tasks/${parsedProfile._id}`, { method: 'GET' })
-            if(!response.ok){
+            if (!response.ok) {
                 toast.error("Unable to get tasks")
-            }else{
+            } else {
                 const responseData = await response.json()
                 setMyTasks(responseData?.userTasks)
                 console.log("Respose tasks ", responseData);
             }
+        }
+        const profile = localStorage.getItem('userProfile');
+        if (profile) {
+            fetchMyTasks()
         } else {
             toast.error("Couldn't find the user")
         }
-        return
     }, [])
     return (
-        <div>
-            <MU_Table myTasks={myTasks} />
+        <div className='bg-slate-700 h-[90vh] rounded-lg'>
+            {
+                myTasks ? (<MU_Table myTasks={myTasks} />) : (<Spinner />)
+            }
         </div>
     )
 }
