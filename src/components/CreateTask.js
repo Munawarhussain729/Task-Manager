@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid'
+import { useDispatch } from 'react-redux'
+import { addTaskCall } from '@/redux/Slices/TaskSlice';
+
 function CreateTask({ tasks, setTasks }) {
     const [task, setTask] = useState({
         id: "",
@@ -8,6 +11,7 @@ function CreateTask({ tasks, setTasks }) {
         status: "toDo"
     })
 
+    const dispatch = useDispatch()
     const handleCreateTask = async (taskTitle) => {
         try {
             const response =
@@ -40,13 +44,8 @@ function CreateTask({ tasks, setTasks }) {
             toast.error("Ticket length should be greater then 3 character")
             return
         }
-        handleCreateTask(task?.name)
-        setTasks((prev) => {
-            const list = [...prev, task]
-            localStorage.setItem('tasks', JSON.stringify(list))
-            toast.success("Toast created");
-            return list
-        })
+        const taskPayload = { title: task.name };
+        dispatch(addTaskCall(taskPayload))
         setTask({ id: '', name: '', status: 'toDo' })
     }
     return (

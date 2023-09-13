@@ -6,9 +6,18 @@ import React, { useEffect, useState } from 'react'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchTasks, getAllTasks } from '@/redux/Slices/TaskSlice';
 
 function TasksHome() {
   const [tasks, setTasks] = useState([])
+  const dispatch = useDispatch()
+  const reduxTasks = useSelector(getAllTasks)
+
+  useEffect(() => {
+    dispatch(fetchTasks())
+  }, [])
+
 
   // useEffect(() => {
   //   if (!!localStorage.getItem('tasks')) {
@@ -31,17 +40,17 @@ function TasksHome() {
         console.error("API request failed with status", response.status);
       }
     }
-    fetchTasks()
+    // fetchTasks()
   }, [])
 
   return (
     <DndProvider backend={HTML5Backend}>
 
       {
-        tasks.length>0 ? (
+        reduxTasks.length>0 ? (
           <div className='w-full rounded-lg min-h-[90vh] flex flex-col items-center bg-slate-700 text-white'>
             <CreateTask tasks={tasks} setTasks={setTasks} />
-            <ListTasks tasks={tasks} setTasks={setTasks} />
+            <ListTasks tasks={reduxTasks} setTasks={setTasks} />
           </div>
         ) : (
           <Spinner />
