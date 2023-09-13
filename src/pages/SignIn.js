@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { useRouter } from 'next/navigation'
+import Cookies from 'js-cookie'
 
 function SignIn() {
     const [inputs, setInputs] = useState({
@@ -40,7 +41,8 @@ function SignIn() {
                 console.log("Data is ", data);
                 toast.success("User login Successful")
                 router.push('/dashboard/home')
-                localStorage.setItem('userProfile', JSON.stringify(data?.userProfile))
+                Cookies.set("userProfile", JSON.stringify(data?.userProfile))
+                // localStorage.setItem('userProfile', JSON.stringify(data?.userProfile))
             }
         } catch (error) {
             toast.error(error?.message)

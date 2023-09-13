@@ -2,14 +2,16 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import ProfileImage from '../../public/transparent_profile_photo.webp'
+import Cookies from 'js-cookie';
 function Navbar({showSideBar, setSideBar}) {
     const [name, setName] = useState('');
 
     useEffect(() => {
-        const profile = localStorage.getItem('userProfile');
-        if (profile) {
+        // const profile = localStorage.getItem('userProfile');
+        const profile  = Cookies.get("userProfile")
+        if (!!profile) {
             const parsedProfile = JSON.parse(profile);
-            setName(parsedProfile.name);
+            setName(parsedProfile?.name);
         }
 
     }, []);
