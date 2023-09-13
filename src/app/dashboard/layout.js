@@ -5,15 +5,17 @@ import { IoCheckmarkDoneCircleOutline } from 'react-icons/io5'
 import { AiOutlineHome } from 'react-icons/ai'
 import { GoSignOut } from 'react-icons/go'
 import { useRouter } from 'next/navigation'
+import Cookies from 'js-cookie'
 function layout({ children }) {
     const [showSideBar, setSideBar] = useState(true)
     const router = useRouter()
     const handleSignout = () => {
-        const uesrProfile = localStorage.getItem('userProfile')
-        if (uesrProfile) {
-            localStorage.setItem('userProfile', '')
+        // const uesrProfile = localStorage.getItem('userProfile')
+      
+            // localStorage.setItem('userProfile', '')
+            Cookies.remove("userProfile")
             router.push('/')
-        }
+        
     }
     return (
         <div className='overflow-hidden bg-slate-200 min-h-screen'>

@@ -1,6 +1,7 @@
 'use client'
 import CreateTask from '@/components/CreateTask'
 import ListTasks from '@/components/ListTasks'
+import Spinner from '@/components/Spinner';
 import React, { useEffect, useState } from 'react'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -35,10 +36,17 @@ function TasksHome() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className='w-full rounded-lg min-h-[90vh] flex flex-col items-center bg-gray-700 text-white'>
-        <CreateTask tasks={tasks} setTasks={setTasks} />
-        <ListTasks tasks={tasks} setTasks={setTasks} />
-      </div>
+
+      {
+        tasks.length>0 ? (
+          <div className='w-full rounded-lg min-h-[90vh] flex flex-col items-center bg-slate-700 text-white'>
+            <CreateTask tasks={tasks} setTasks={setTasks} />
+            <ListTasks tasks={tasks} setTasks={setTasks} />
+          </div>
+        ) : (
+          <Spinner />
+        )
+      }
     </DndProvider>
   )
 }
