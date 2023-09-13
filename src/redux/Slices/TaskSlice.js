@@ -44,6 +44,24 @@ export const addTaskCall = createAsyncThunk('/task/addTask', async (payload, thu
         return error
     }
 })
+
+export const updateTask = createAsyncThunk('/task/updateTask', async (payload, thunkAPI) => {
+    try {
+        const response = await fetch('http://localhost:8080/task/update-task',
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+
+        const data = await response.json();
+        return data?.updatedTask
+    } catch (error) {
+        return error
+    }
+})
 export const taskSlice = createSlice({
     name: 'taskSlice',
     initialState,
@@ -67,11 +85,24 @@ export const taskSlice = createSlice({
             state.status = 'loading'
         })
         builder.addCase(addTaskCall.fulfilled, (state, action) => {
-            console.log("Got something in action ", action);
             state.tasks.push(action.payload);
             state.status = 'succeeded';
         })
         builder.addCase(addTaskCall.rejected, (state, action) => {
+            state.status = 'rejected'
+        })
+        builder.addCase(updateTask.pending, (state, action) => {
+            state.status = 'loading'
+        })
+        builder.addCase(updateTask.fulfilled, (state, action) => {
+
+            const indexToUpdate = state.tasks.findIndex(item => item._id === action.payload._id);
+            if (indexToUpdate !== -1) {
+                state.tasks[indexToUpdate] = action.payload;
+            }
+            state.status = 'succeeded';
+        })
+        builder.addCase(updateTask.rejected, (state, action) => {
             state.status = 'rejected'
         })
 

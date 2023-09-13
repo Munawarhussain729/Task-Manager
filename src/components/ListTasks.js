@@ -3,8 +3,10 @@ import ListSection from './ListSection'
 import DropDown from './DropDown';
 import { MdCancel } from 'react-icons/md'
 import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchTasks, getAllTasks, updateTask } from '@/redux/Slices/TaskSlice';
 
-function ListTasks({ tasks, setTasks }) {
+function ListTasks({ setTasks }) {
     const [todos, setTodos] = useState([])
     const [inProgress, setInProgress] = useState([])
     const [closed, setclosed] = useState([])
@@ -16,6 +18,8 @@ function ListTasks({ tasks, setTasks }) {
     const [selectedTask, setSelectedTask] = useState(null)
     const textAreaRef = useRef(null)
 
+    const tasks = useSelector(getAllTasks)
+    const dispatch = useDispatch()
     const handleDateChange = newValue => {
         setDateValue(newValue);
     };
@@ -84,18 +88,7 @@ function ListTasks({ tasks, setTasks }) {
                 description: description
             }
             setSelectedTask(null)
-            const response = await fetch('http://localhost:8080/task/update-task',
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ _id: taskId, details: detailObject })
-                })
-            if (!response.ok) {
-                const data = response.json();
-                toast.error(data?.message)
-            }
+            dispatch(updateTask({ _id: taskId, details: detailObject }))
         } catch (error) {
             console.log("unable to update: ", error);
         }

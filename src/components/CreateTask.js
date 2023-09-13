@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { useDispatch } from 'react-redux'
 import { addTaskCall } from '@/redux/Slices/TaskSlice';
 
-function CreateTask({ tasks, setTasks }) {
+function CreateTask() {
     const [task, setTask] = useState({
         id: "",
         name: "",
@@ -12,31 +12,6 @@ function CreateTask({ tasks, setTasks }) {
     })
 
     const dispatch = useDispatch()
-    const handleCreateTask = async (taskTitle) => {
-        try {
-            const response =
-                await fetch('http://localhost:8080/task/create-task',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ title: taskTitle }),
-                    },
-                )
-            if (!response.ok) {
-                const data = response.json();
-                toast.error(data?.message)
-            }
-            else{
-                window.location.reload()
-                toast.success('Task created successfully')
-            }
-        } catch (error) {
-            console.log("Found an error ", error);
-        }
-
-    }
 
     const handleOnSubmit = (e) => {
         e.preventDefault();

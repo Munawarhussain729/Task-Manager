@@ -19,37 +19,13 @@ function TasksHome() {
   }, [])
 
 
-  // useEffect(() => {
-  //   if (!!localStorage.getItem('tasks')) {
-  //     setTasks(JSON.parse(localStorage.getItem('tasks')))
-  //   }
-  // }, [])
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const response = await fetch('http://localhost:8080/task/get-tasks', {
-        method: 'GET',
-      });
-      if (response.ok) {
-        const data = await response.json(); // Parse the response body as JSON
-        setTasks(data?.allTasks)
-        console.log("API response is ", data);
-      } else {
-        const data = response.json();
-        toast.error(data?.message)
-        console.error("API request failed with status", response.status);
-      }
-    }
-    // fetchTasks()
-  }, [])
-
   return (
     <DndProvider backend={HTML5Backend}>
 
       {
         reduxTasks.length>0 ? (
           <div className='w-full rounded-lg min-h-[90vh] flex flex-col items-center bg-slate-700 text-white'>
-            <CreateTask tasks={tasks} setTasks={setTasks} />
+            <CreateTask />
             <ListTasks tasks={reduxTasks} setTasks={setTasks} />
           </div>
         ) : (
