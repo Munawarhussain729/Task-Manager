@@ -1,50 +1,28 @@
 import { useDrop } from "react-dnd"
 import Task from "./Task"
 import { toast } from "react-toastify"
+import { useDispatch, useSelector } from "react-redux"
+import { UpdatePriority, getAllTasks, updateTaskStatus } from "@/redux/Slices/TaskSlice"
 
 
-const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgress, setclosed, setTasks, tasks, setSelectedTask }) => {
+const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgress, setclosed, setSelectedTask }) => {
     let text = "ToDo"
     let background = "bg-slate-500"
     let tasksToMap = todos
+    const dispatch = useDispatch()
+    const tasks = useSelector(getAllTasks)
+
     const UpdateItemPriority = async (taskId, taskStatus) => {
-        try {
-            const response =
-                await fetch('http://localhost:8080/task/udpate-status',
-                    {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ _id: taskId, status: taskStatus }),
-                    },
-                )
-
-            const data = await response.json();
-            if (!response.ok) {
-                const data = response.json();
-                toast.error(data?.message)
-            }
-        } catch (error) {
-            console.log("Found an error ", error);
-        }
-
+        dispatch(updateTaskStatus({ _id: taskId, status: taskStatus }))
     }
     const addItemToSection = (id) => {
-        console.log("Task Id is ", id);
-
-        setTasks((prev) => {
-            const mTasks = prev.map((t) => {
+        const mTasks = tasks.map((t) => {
                 if (t._id === id) {
                     UpdateItemPriority(id, status)
                     return { ...t, status, status: status }
                 }
                 return t
-            })
-            localStorage.setItem('tasks', JSON.stringify(mTasks))
-            return mTasks
         })
-
     }
     const [{ isOver }, drop] = useDrop(() => ({
         accept: "task",
@@ -72,8 +50,8 @@ const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgres
                 {
                     tasksToMap?.length > 0 && (
                         tasksToMap.map((task, index) => (
-                            <div key={index} onClick={() => setSelectedTask(task)}>
-                                <Task key={task.id} task={task} tasks={tasks} setTasks={setTasks} />
+                            <div key={index}>
+                                <Task key={task.id} task={task} setSelectedTask={setSelectedTask} />
                             </div>
                         ))
                     )

@@ -62,13 +62,55 @@ export const updateTask = createAsyncThunk('/task/updateTask', async (payload, t
         return error
     }
 })
+
+export const updateTaskStatus = createAsyncThunk('/task/updateTaskStatus', async (payload, thunkAPI) => {
+    try {
+        const response =
+            await fetch('http://localhost:8080/task/udpate-status',
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                },
+            )
+
+        const data = await response.json();
+        console.log("data is ", data);
+        return data?.updatedTask
+    } catch (error) {
+        return error
+    }
+})
+
+export const RemoveTask = createAsyncThunk('/tasks/removeTask', async (payload, thunkAPI) => {
+    try {
+        const response = await fetch(`http://localhost:8080/task/remove-task/${payload}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+               
+            })
+        if (!response.ok) {
+            return 'Unable to remove'
+        }
+        return payload
+    } catch (error) {
+        return error
+    }
+})
+
 export const taskSlice = createSlice({
     name: 'taskSlice',
     initialState,
     reducers: {
-        // addTasks: (state, action) => {
-        //     state.tasks.push(action?.payload)
-        // }
+        UpdatePriority: (state, action) => {
+            console.log("Updated tasks are ", action.payload);
+            state.tasks = [...action?.payload]
+        },
     },
     extraReducers(builder) {
         builder.addCase(fetchTasks.pending, (state, action) => {
@@ -81,6 +123,7 @@ export const taskSlice = createSlice({
         builder.addCase(fetchTasks.rejected, (state, action) => {
             state.status = 'rejected'
         })
+
         builder.addCase(addTaskCall.pending, (state, action) => {
             state.status = 'loading'
         })
@@ -91,6 +134,7 @@ export const taskSlice = createSlice({
         builder.addCase(addTaskCall.rejected, (state, action) => {
             state.status = 'rejected'
         })
+
         builder.addCase(updateTask.pending, (state, action) => {
             state.status = 'loading'
         })
@@ -106,9 +150,36 @@ export const taskSlice = createSlice({
             state.status = 'rejected'
         })
 
+        builder.addCase(updateTaskStatus.pending, (state, action) => {
+            state.status = 'loading'
+        })
+        builder.addCase(updateTaskStatus.fulfilled, (state, action) => {
+            console.log("updated action payload ", action.payload);
+            const indexToUpdate = state.tasks.findIndex(item => item?._id === action?.payload?._id);
+            if (indexToUpdate !== -1) {
+                state.tasks[indexToUpdate] = action.payload;
+            }
+            state.status = 'succeeded';
+        })
+        builder.addCase(updateTaskStatus.rejected, (state, action) => {
+            state.status = 'rejected'
+        })
+
+        builder.addCase(RemoveTask.pending, (state, action) => {
+            state.status = 'loading'
+        })
+        builder.addCase(RemoveTask.fulfilled, (state, action) => {
+            console.log("Remove action payload ", action.payload);
+            const filteredTask = state.tasks.filter((item) => item._id !== action.payload)
+            state.tasks = [...filteredTask]
+            state.status = 'succeeded';
+        })
+        builder.addCase(RemoveTask.rejected, (state, action) => {
+            state.status = 'rejected'
+        })
     }
 })
 
 export const getAllTasks = (state) => (state.taskReducer.tasks)
-// export const { addTask } = taskSlice.actions
+export const { UpdatePriority } = taskSlice.actions
 export default taskSlice.reducer

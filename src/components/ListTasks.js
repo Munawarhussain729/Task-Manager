@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, getAllTasks, updateTask } from '@/redux/Slices/TaskSlice';
 
-function ListTasks({ setTasks }) {
+function ListTasks() {
     const [todos, setTodos] = useState([])
     const [inProgress, setInProgress] = useState([])
     const [closed, setclosed] = useState([])
@@ -108,8 +108,6 @@ function ListTasks({ setTasks }) {
                         setTodos={setTodos}
                         setInProgress={setInProgress}
                         setclosed={setclosed}
-                        tasks={tasks}
-                        setTasks={setTasks}
                         setSelectedTask={setSelectedTask}
                     />
                 ))}

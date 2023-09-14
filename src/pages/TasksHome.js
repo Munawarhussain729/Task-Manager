@@ -26,7 +26,7 @@ function TasksHome() {
         reduxTasks.length>0 ? (
           <div className='w-full rounded-lg min-h-[90vh] flex flex-col items-center bg-slate-700 text-white'>
             <CreateTask />
-            <ListTasks tasks={reduxTasks} setTasks={setTasks} />
+            <ListTasks />
           </div>
         ) : (
           <Spinner />
