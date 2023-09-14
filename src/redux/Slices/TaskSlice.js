@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { toast } from 'react-toastify'
 
 const initialState = {
     tasks: [],
@@ -12,7 +11,7 @@ export const fetchTasks = createAsyncThunk('/tasks/fetchTasks', async (payload, 
             method: 'GET',
         });
         if (response.ok) {
-            const data = await response.json(); // Parse the response body as JSON
+            const data = await response.json(); 
             return [...data?.allTasks];
         } else {
             const data = response.json();
@@ -24,7 +23,6 @@ export const fetchTasks = createAsyncThunk('/tasks/fetchTasks', async (payload, 
 })
 export const addTaskCall = createAsyncThunk('/task/addTask', async (payload, thunkAPI) => {
     try {
-        console.log("Action payload is ", payload);
         const response =
             await fetch('http://localhost:8080/task/create-task',
                 {
@@ -77,7 +75,6 @@ export const updateTaskStatus = createAsyncThunk('/task/updateTaskStatus', async
             )
 
         const data = await response.json();
-        console.log("data is ", data);
         return data?.updatedTask
     } catch (error) {
         return error
@@ -108,7 +105,6 @@ export const taskSlice = createSlice({
     initialState,
     reducers: {
         UpdatePriority: (state, action) => {
-            console.log("Updated tasks are ", action.payload);
             state.tasks = [...action?.payload]
         },
     },
@@ -154,7 +150,6 @@ export const taskSlice = createSlice({
             state.status = 'loading'
         })
         builder.addCase(updateTaskStatus.fulfilled, (state, action) => {
-            console.log("updated action payload ", action.payload);
             const indexToUpdate = state.tasks.findIndex(item => item?._id === action?.payload?._id);
             if (indexToUpdate !== -1) {
                 state.tasks[indexToUpdate] = action.payload;
@@ -169,7 +164,6 @@ export const taskSlice = createSlice({
             state.status = 'loading'
         })
         builder.addCase(RemoveTask.fulfilled, (state, action) => {
-            console.log("Remove action payload ", action.payload);
             const filteredTask = state.tasks.filter((item) => item._id !== action.payload)
             state.tasks = [...filteredTask]
             state.status = 'succeeded';

@@ -42,7 +42,6 @@ function Signup() {
             })
             if (!response.ok) {
                 const data = await response.json()
-                console.log("Response is ", data.message);
                 toast.error(data.message)
             } else {
                 toast.success("Signup successful")

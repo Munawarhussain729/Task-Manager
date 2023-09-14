@@ -34,11 +34,9 @@ function SignIn() {
             })
             if (!response.ok) {
                 const data = await response.json()
-                console.log("Response is ", data.message);
                 toast.error(data.message)
             } else {
                 const data = await response.json()
-                console.log("Data is ", data);
                 toast.success("User login Successful")
                 router.push('/dashboard/home')
                 Cookies.set("userProfile", JSON.stringify(data?.userProfile))

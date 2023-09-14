@@ -16,9 +16,7 @@ function Task({ task, setSelectedTask }) {
     const dispatch = useDispatch()
 
 
-    const handleRemove = (id) => {
-        // const fTasks = tasks.filter((item) => item.id !== id)
-        console.log("Id is ", task._id);
+    const handleRemove = () => {
         dispatch(RemoveTask(task._id))
         toast.success("Task removed")
     }
@@ -27,7 +25,7 @@ function Task({ task, setSelectedTask }) {
             {task.title && (
                 <div ref={drag} className={`relative p-4 mt-8  shadow-md cursor-grab bg-slate-300 rounded-md text-black ${isDragging ? 'opacity-25' : 'opacity-100'}`}>
                     <div className='flex justify-between'>
-                        <h1 className='text-lg' onClick={() => { setSelectedTask(task) }}>{task?.title}</h1>
+                        <h1 className='text-lg flex-1' onClick={() => { setSelectedTask(task) }}>{task?.title}</h1>
                         <IoMdRemoveCircleOutline color='black' className='cursor-pointer' size={20} onClick={() => { handleRemove() }} />
                     </div>
                 </div>

@@ -9,7 +9,6 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 function DropDown({ value, setValue, options, label, Useroptions }) {
 
     const handleChange = (event) => {
-        console.log("value is ", event.target.value);
         setValue(event.target.value);
     };
 

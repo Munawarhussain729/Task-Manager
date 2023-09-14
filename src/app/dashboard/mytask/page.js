@@ -15,7 +15,6 @@ function page() {
             } else {
                 const responseData = await response.json()
                 setMyTasks(responseData?.userTasks)
-                console.log("Respose tasks ", responseData);
             }
         }
         const profile = localStorage.getItem('userProfile');

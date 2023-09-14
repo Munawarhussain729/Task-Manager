@@ -2,10 +2,10 @@ import { useDrop } from "react-dnd"
 import Task from "./Task"
 import { toast } from "react-toastify"
 import { useDispatch, useSelector } from "react-redux"
-import { UpdatePriority, getAllTasks, updateTaskStatus } from "@/redux/Slices/TaskSlice"
+import {  getAllTasks, updateTaskStatus } from "@/redux/Slices/TaskSlice"
 
 
-const ListSection = ({ status, todos, inProgress, closed, setTodos, setInProgress, setclosed, setSelectedTask }) => {
+const ListSection = ({ status, todos, inProgress, closed, setSelectedTask }) => {
     let text = "ToDo"
     let background = "bg-slate-500"
     let tasksToMap = todos

@@ -5,12 +5,13 @@ import { MdCancel } from 'react-icons/md'
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, getAllTasks, updateTask } from '@/redux/Slices/TaskSlice';
+import { fetchAllUsers, getAllUsers } from '@/redux/Slices/UserSlice';
 
 function ListTasks() {
     const [todos, setTodos] = useState([])
     const [inProgress, setInProgress] = useState([])
     const [closed, setclosed] = useState([])
-    const [allUsers, setAllUsers] = useState([])
+    // const [allUsers, setAllUsers] = useState([])
     const [dateValue, setDateValue] = useState(new Date());
     const [priority, setPriority] = useState('')
     const [description, setDescription] = useState('')
@@ -20,6 +21,7 @@ function ListTasks() {
 
     const tasks = useSelector(getAllTasks)
     const dispatch = useDispatch()
+    const allUsers = useSelector(getAllUsers)
     const handleDateChange = newValue => {
         setDateValue(newValue);
     };
@@ -67,16 +69,7 @@ function ListTasks() {
     }, [selectedTask])
 
     useEffect(() => {
-        const getAllUsers = async () => {
-            const response = await fetch('http://localhost:8080/user/users', { method: 'GET' })
-            if (!response.ok) {
-                toast.error("unable to fetch all users")
-            } else {
-                const data = await response.json()
-                setAllUsers(data?.users)
-            }
-        }
-        getAllUsers()
+        dispatch(fetchAllUsers())
     }, [])
 
     const handleSaveClick = async (taskId) => {
@@ -105,9 +98,6 @@ function ListTasks() {
                         todos={todos}
                         inProgress={inProgress}
                         closed={closed}
-                        setTodos={setTodos}
-                        setInProgress={setInProgress}
-                        setclosed={setclosed}
                         setSelectedTask={setSelectedTask}
                     />
                 ))}
@@ -127,7 +117,7 @@ function ListTasks() {
                 <div className='flex items-center flex-wrap w-full md:w-1/2 my-5'>
                     <p className='m-0 md:mr-10'>Assign:</p>
                     <div className='flex-1 mx-3'>
-                        <DropDown value={assignPerson} setValue={setAssignPerson} Useroptions={allUsers} label={'Select Person'} />
+                        <DropDown value={assignPerson || ''} setValue={setAssignPerson} Useroptions={allUsers} label={'Select Person'} />
                     </div>
                 </div>
                 <div className='flex items-center flex-wrap w-full md:w-1/2 my-5'>
@@ -142,7 +132,7 @@ function ListTasks() {
                 <div className='flex items-center flex-wrap w-full md:w-1/2 my-5'>
                     <p className='m-0 md:mr-4'>Task priority:</p>
                     <div className='flex-1'>
-                        <DropDown value={priority} setValue={setPriority} options={['High', 'medium', 'low']} label={'Select Task priority'} />
+                        <DropDown value={priority|| ''} setValue={setPriority} options={['High', 'medium', 'low']} label={'Select Task priority'} />
                     </div>
                 </div>
                 <div >
