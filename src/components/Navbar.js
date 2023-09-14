@@ -3,8 +3,10 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import ProfileImage from '../../public/transparent_profile_photo.webp'
 import Cookies from 'js-cookie';
+import { signIn, signOut, useSession } from "next-auth/react"
 function Navbar({showSideBar, setSideBar}) {
     const [name, setName] = useState('');
+    const { data: session } = useSession()
 
     useEffect(() => {
         // const profile = localStorage.getItem('userProfile');
@@ -31,6 +33,7 @@ function Navbar({showSideBar, setSideBar}) {
                     <div className="flex items-center" >
                         <Image src={ProfileImage} width={50} height={50} alt='username' className='rounded-full bg-cover' />
                         <h1 className='ml-5 text-xl font-semibold text-white'>{name}</h1>
+                        {session ? (<button onClick={() => signOut()}>signOut</button>) : (<button onClick={() => signIn()}>SignIn</button>)}
                     </div>
                 </div>
             </nav>
