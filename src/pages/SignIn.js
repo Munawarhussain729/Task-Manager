@@ -1,10 +1,14 @@
 'use client'
 import { Button } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
+import { useSession } from "next-auth/react"
+import { signIn } from 'next-auth/react';
+import { useDispatch } from 'react-redux'
+import { validateGoogleUser } from '@/redux/Slices/UserSlice'
 
 function SignIn() {
     const [inputs, setInputs] = useState({
@@ -13,6 +17,10 @@ function SignIn() {
     })
     const [show, setShow] = useState(false)
     const router = useRouter()
+    const { data: session } = useSession()
+    const { data } = useSession()
+    const dispatch = useDispatch()
+    // const [userProfile, setUserProfile] = useState(localStorage?.getItem('userProfile') || '');
 
     const handleInputChange = (eventValue, type) => {
         try {
@@ -21,6 +29,29 @@ function SignIn() {
             console.log("Error is ", error);
         }
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!!session) {
+                if (session?.user?.email) {
+                    console.log("user details ", session?.user);
+                    await dispatch(validateGoogleUser(session.user))
+                }
+            }
+            if (Cookies.get('userProfile')) {
+                router.push('/dashboard/home')
+            }
+        };
+
+        fetchData();
+    }, [session]);
+
+    // useEffect(()=>{
+    //     if(userProfile.length>0){
+    //         toast.success("Inside Signin Successfull")
+    //     }
+    //     console.log("User prpofile in signin ", userProfile);
+    // },[userProfile])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -46,6 +77,18 @@ function SignIn() {
             toast.error(error?.message)
         }
     }
+
+    const handleGoogleSignIn = async () => {
+        try {
+            const response = await signIn('google'); // Use 'google' to specify the Google provider
+            if (response?.error) {
+                // Handle sign-in error
+                console.error('Google sign-in error:', response.error);
+            }
+        } catch (error) {
+            console.error('Google sign-in error:', error);
+        }
+    };
 
     return (
         <div className='h-screen bg-slate-300 flex justify-center items-center'>
@@ -98,6 +141,17 @@ function SignIn() {
                     >
                         SignIn
                     </button>
+
+                    <button
+                        onClick={() => handleGoogleSignIn()}
+                        type='button'
+                        className='bg-slate-200 text-black py-4 px-6 my-4 rounded-xl
+                        text-lg transition-all delay-100 hover:bg-slate-300 hover:text-black 
+                        font-semibold text-md w-full'
+                    >
+                        SignIn with Google
+                    </button>
+
                 </form>
             </div>
         </div>

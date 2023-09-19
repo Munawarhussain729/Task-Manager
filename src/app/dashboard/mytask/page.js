@@ -1,6 +1,7 @@
 'use client'
 import MU_Table from '@/components/MU_Table'
 import Spinner from '@/components/Spinner';
+import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 
@@ -17,7 +18,7 @@ function page() {
                 setMyTasks(responseData?.userTasks)
             }
         }
-        const profile = localStorage.getItem('userProfile');
+        const profile =Cookies.get("userProfile")
         if (profile) {
             fetchMyTasks()
         } else {

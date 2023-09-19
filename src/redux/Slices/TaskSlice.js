@@ -113,7 +113,7 @@ export const taskSlice = createSlice({
             state.status = 'loading'
         })
         builder.addCase(fetchTasks.fulfilled, (state, action) => {
-            state.tasks = action.payload;
+            state.tasks = action.payload || [];
             state.status = 'succeeded';
         })
         builder.addCase(fetchTasks.rejected, (state, action) => {
@@ -124,9 +124,11 @@ export const taskSlice = createSlice({
             state.status = 'loading'
         })
         builder.addCase(addTaskCall.fulfilled, (state, action) => {
-            state.tasks.push(action.payload);
+            if (action.payload) {
+              state.tasks.push(action.payload);
+            }
             state.status = 'succeeded';
-        })
+        });
         builder.addCase(addTaskCall.rejected, (state, action) => {
             state.status = 'rejected'
         })
@@ -136,9 +138,9 @@ export const taskSlice = createSlice({
         })
         builder.addCase(updateTask.fulfilled, (state, action) => {
 
-            const indexToUpdate = state.tasks.findIndex(item => item._id === action.payload._id);
+            const indexToUpdate = state.tasks.findIndex(item => item._id === action?.payload?._id);
             if (indexToUpdate !== -1) {
-                state.tasks[indexToUpdate] = action.payload;
+                state.tasks[indexToUpdate] = action?.payload;
             }
             state.status = 'succeeded';
         })
@@ -164,7 +166,7 @@ export const taskSlice = createSlice({
             state.status = 'loading'
         })
         builder.addCase(RemoveTask.fulfilled, (state, action) => {
-            const filteredTask = state.tasks.filter((item) => item._id !== action.payload)
+            const filteredTask = state.tasks.filter((item) => item._id !== action?.payload)
             state.tasks = [...filteredTask]
             state.status = 'succeeded';
         })

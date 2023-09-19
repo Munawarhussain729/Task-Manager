@@ -11,27 +11,48 @@ import { fetchTasks, getAllTasks } from '@/redux/Slices/TaskSlice';
 
 function TasksHome() {
   const [tasks, setTasks] = useState([])
+  const [loading, setLoading] = useState(true); 
   const dispatch = useDispatch()
   const reduxTasks = useSelector(getAllTasks)
-
+  
   useEffect(() => {
-    dispatch(fetchTasks())
-  }, [])
+    const fetchTasksTimeout = setTimeout(() => {
+      setLoading(false);
+    }, 50000); // 50 seconds in milliseconds
 
+    dispatch(fetchTasks())
+      .then(() => {
+        clearTimeout(fetchTasksTimeout);
+        setLoading(false);
+      })
+      .catch((error) => {
+        clearTimeout(fetchTasksTimeout);
+        setLoading(false);
+        console.error("Failed to fetch tasks:", error);
+        toast.error("Failed to fetch tasks. Please try again later.");
+      });
+
+    return () => {
+      clearTimeout(fetchTasksTimeout);
+    };
+  }, [])
 
   return (
     <DndProvider backend={HTML5Backend}>
-
-      {
-        reduxTasks.length>0 ? (
-          <div className='w-full rounded-lg min-h-[90vh] flex flex-col items-center bg-slate-700 text-white'>
-            <CreateTask />
-            <ListTasks />
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className='w-full rounded-lg min-h-[90vh] flex flex-col items-center bg-slate-700 text-white'>
+            {reduxTasks.length > 0 ? (
+              <>
+                <CreateTask />
+                <ListTasks />
+              </>
+            ) : (
+              <p>No tasks found</p>
+            )}
           </div>
-        ) : (
-          <Spinner />
-        )
-      }
+      )}
     </DndProvider>
   )
 }
