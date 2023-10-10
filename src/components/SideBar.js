@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IoCheckmarkDoneCircleOutline } from 'react-icons/io5'
 import { AiOutlineHome } from 'react-icons/ai'
 import { GoSignOut } from 'react-icons/go'
@@ -7,16 +7,22 @@ import Cookies from 'js-cookie'
 import { useSession } from "next-auth/react"
 import { signOut } from 'next-auth/react';
 import Collapsable from './Collapsable'
+import { useSelector } from 'react-redux'
+import { getAllProjects } from '@/redux/Slices/ProjectSlice'
 
 function SideBar({ showSideBar }) {
     const router = useRouter()
     let { data: session } = useSession()
+    
+    const [subtitles, setSubTitles] = useState(useSelector(getAllProjects) || [])
     const handleSignout = async () => {
         await signOut();
         Cookies.remove("userProfile")
         router.push('/')
 
     }
+
+    
     return (
         <div className='overflow-hidden py-1 '>
             <div
@@ -38,7 +44,7 @@ function SideBar({ showSideBar }) {
                         <h1 className='ml-2 text-lg'>My Tasks</h1>
                     </div>
                     <hr className='h-0.5 my-3 bg-slate-400' />
-                    <Collapsable title={"Title project "} subTitles={["project 1", "project 2", "project 3"]} />
+                    <Collapsable title={"Title project "} subTitles={subtitles} setSubTitles={setSubTitles} />
                 </div>
                 <div>
                     <hr className='h-0.5 my-3 bg-slate-400' />

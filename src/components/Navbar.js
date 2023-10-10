@@ -7,7 +7,7 @@ import { AiFillEdit, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { useDispatch } from 'react-redux';
 import { updateUserProfile } from '@/redux/Slices/UserSlice';
 
-function Navbar({showSideBar, setSideBar}) {
+function Navbar({ showSideBar, setSideBar }) {
     const [name, setName] = useState('');
     const [edit, setEdit] = useState(false)
     const modalRef = useRef(null);
@@ -21,10 +21,9 @@ function Navbar({showSideBar, setSideBar}) {
     })
 
     const dispatch = useDispatch()
-
     const setInputs = () => {
-        const profile  = Cookies.get("userProfile")
-        if (profile) {
+        const profile = Cookies.get("userProfile")
+        if (!!profile) {
             const parsedProfile = JSON.parse(profile);
             setEditInput({
                 name: parsedProfile?.name || "",
@@ -60,7 +59,7 @@ function Navbar({showSideBar, setSideBar}) {
             <nav className="bg-slate-900 h-[9vh]">
                 <div className="max-w-screen flex items-center justify-between mx-10 p-4">
                     <div className='flex'>
-                        <button className='text-white' onClick={()=>{setSideBar(!showSideBar)}}>
+                        <button className='text-white' onClick={() => { setSideBar(!showSideBar) }}>
                             <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
                                 <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
                             </svg>
@@ -125,7 +124,7 @@ function Navbar({showSideBar, setSideBar}) {
                                             id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                                             placeholder="name@company.com" required />
                                     </div>
-                                    <div >
+                                    {/* <div >
                                         <label htmlFor="password"
                                             className="block mb-2 text-sm font-medium text-gray-900">Your password</label>
                                         <div className='flex items-center'>
@@ -143,7 +142,7 @@ function Navbar({showSideBar, setSideBar}) {
                                                 (<AiOutlineEyeInvisible size={20} onClick={() => { setShow(!show) }} className='cursor-pointer ml-2' />)
                                             }
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                     <button type="submit" className="w-full text-white bg-slate-700 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-slate-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Update the Profile</button>
 

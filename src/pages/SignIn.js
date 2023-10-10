@@ -56,7 +56,7 @@ function SignIn() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            const response = await fetch('http://localhost:8080/user/validate-user', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}user/validate-user`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ function SignIn() {
                         SignIn
                     </button>
 
-                    <button
+                    {/* <button
                         onClick={() => handleGoogleSignIn()}
                         type='button'
                         className='bg-slate-200 text-black py-4 px-6 my-4 rounded-xl
@@ -150,7 +150,7 @@ function SignIn() {
                         font-semibold text-md w-full'
                     >
                         SignIn with Google
-                    </button>
+                    </button> */}
 
                 </form>
             </div>

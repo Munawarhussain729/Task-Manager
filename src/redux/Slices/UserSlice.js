@@ -9,7 +9,7 @@ const initialState = {
 
 export const fetchAllUsers = createAsyncThunk('/user/fetchUsers', async (payload, thunkAPI) => {
     try {
-        const response = await fetch('http://localhost:8080/user/users', { method: 'GET' })
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}user/users`, { method: 'GET' })
         if (!response.ok) {
             return []
         }
@@ -22,7 +22,7 @@ export const fetchAllUsers = createAsyncThunk('/user/fetchUsers', async (payload
 
 export const updateUserProfile = createAsyncThunk('/user/updateProfile', async (payload, thunkAPI) => {
     try {
-        const response = await fetch('http://localhost:8080/user/update-profile',
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}user/update-profile`,
             {
                 method: 'PUT',
                 headers: {
@@ -45,7 +45,7 @@ export const updateUserProfile = createAsyncThunk('/user/updateProfile', async (
 
 export const validateGoogleUser = createAsyncThunk('/user/validate-google-user', async (payload, thunkAPI) => {
     try {
-        const response = await fetch('http://localhost:8080/user/validate-google-user',
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}user/validate-google-user`,
             {
                 method: 'POST',
                 headers: {
@@ -74,32 +74,32 @@ export const userSlice = createSlice({
         builder.addCase(fetchAllUsers.pending, (state, action) => {
             state.status = 'pending'
         }),
-            builder.addCase(fetchAllUsers.fulfilled, (state, action) => {
-                state.users = action.payload || []
-                state.status = 'fulfilled'
-            }),
-            builder.addCase(fetchAllUsers.rejected, (state, action) => {
-                state.status = 'rejected'
-            }),
-            builder.addCase(validateGoogleUser.pending, (state, action) => {
-                state.status = 'pending'
-            }),
-            builder.addCase(validateGoogleUser.fulfilled, (state, action) => {
-                // localStorage.setItem("userProfile", JSON.stringify(action.payload))
-                state.status = 'fulfilled';
-            });
+        builder.addCase(fetchAllUsers.fulfilled, (state, action) => {
+            state.users = action.payload || []
+            state.status = 'fulfilled'
+        }),
+        builder.addCase(fetchAllUsers.rejected, (state, action) => {
+            state.status = 'rejected'
+        }),
+        builder.addCase(validateGoogleUser.pending, (state, action) => {
+            state.status = 'pending'
+        }),
+        builder.addCase(validateGoogleUser.fulfilled, (state, action) => {
+            // localStorage.setItem("userProfile", JSON.stringify(action.payload))
+            state.status = 'fulfilled';
+        });
 
         builder.addCase(validateGoogleUser.rejected, (state, action) => {
             state.status = 'rejected'
         }),
-            builder.addCase(updateUserProfile.pending, (state, action) => {
+        builder.addCase(updateUserProfile.pending, (state, action) => {
             state.status = 'pending'
         }),
-            builder.addCase(updateUserProfile.fulfilled, (state, action) => {
-                toast.success("User updated successfully ")
-                state.status = 'fulfilled'
+        builder.addCase(updateUserProfile.fulfilled, (state, action) => {
+            toast.success("User updated successfully ")
+            state.status = 'fulfilled'
         }),
-            builder.addCase(updateUserProfile.rejected, (state, action) => {
+        builder.addCase(updateUserProfile.rejected, (state, action) => {
             state.status = 'rejected'
         })
     }

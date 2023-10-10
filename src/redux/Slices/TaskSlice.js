@@ -7,7 +7,7 @@ const initialState = {
 
 export const fetchTasks = createAsyncThunk('/tasks/fetchTasks', async (payload, thunkAPI) => {
     try {
-        const response = await fetch('http://localhost:8080/task/get-tasks', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}task/get-tasks`, {
             method: 'GET',
         });
         if (response.ok) {
@@ -24,7 +24,7 @@ export const fetchTasks = createAsyncThunk('/tasks/fetchTasks', async (payload, 
 export const addTaskCall = createAsyncThunk('/task/addTask', async (payload, thunkAPI) => {
     try {
         const response =
-            await fetch('http://localhost:8080/task/create-task',
+            await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}task/create-task`,
                 {
                     method: 'POST',
                     headers: {
@@ -45,7 +45,7 @@ export const addTaskCall = createAsyncThunk('/task/addTask', async (payload, thu
 
 export const updateTask = createAsyncThunk('/task/updateTask', async (payload, thunkAPI) => {
     try {
-        const response = await fetch('http://localhost:8080/task/update-task',
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}task/update-task`,
             {
                 method: 'PUT',
                 headers: {
@@ -64,7 +64,7 @@ export const updateTask = createAsyncThunk('/task/updateTask', async (payload, t
 export const updateTaskStatus = createAsyncThunk('/task/updateTaskStatus', async (payload, thunkAPI) => {
     try {
         const response =
-            await fetch('http://localhost:8080/task/udpate-status',
+            await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}task/udpate-status`,
                 {
                     method: 'PUT',
                     headers: {
@@ -83,7 +83,7 @@ export const updateTaskStatus = createAsyncThunk('/task/updateTaskStatus', async
 
 export const RemoveTask = createAsyncThunk('/tasks/removeTask', async (payload, thunkAPI) => {
     try {
-        const response = await fetch(`http://localhost:8080/task/remove-task/${payload}`,
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}task/remove-task/${payload}`,
             {
                 method: 'DELETE',
                 headers: {

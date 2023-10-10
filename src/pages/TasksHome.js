@@ -8,13 +8,16 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, getAllTasks } from '@/redux/Slices/TaskSlice';
+import { fetchAllProjects } from '@/redux/Slices/ProjectSlice';
 
 function TasksHome() {
   const [tasks, setTasks] = useState([])
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch()
   const reduxTasks = useSelector(getAllTasks)
-  
+
+
+
   useEffect(() => {
     const fetchTasksTimeout = setTimeout(() => {
       setLoading(false);
@@ -37,21 +40,25 @@ function TasksHome() {
     };
   }, [])
 
+  useEffect(() => {
+    dispatch(fetchAllProjects())
+  }, [])
+
   return (
     <DndProvider backend={HTML5Backend}>
       {loading ? (
         <Spinner />
       ) : (
         <div className='w-full rounded-lg min-h-[90vh] flex flex-col items-center bg-slate-700 text-white'>
-            {reduxTasks.length > 0 ? (
-              <>
-                <CreateTask />
-                <ListTasks />
-              </>
-            ) : (
-              <p>No tasks found</p>
-            )}
-          </div>
+          {reduxTasks.length > 0 ? (
+            <>
+              <CreateTask />
+              <ListTasks />
+            </>
+          ) : (
+            <p>No tasks found</p>
+          )}
+        </div>
       )}
     </DndProvider>
   )

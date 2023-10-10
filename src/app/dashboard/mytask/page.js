@@ -10,7 +10,7 @@ function page() {
     useEffect(() => {
         const fetchMyTasks = async () => {
             const parsedProfile = JSON.parse(profile);
-            const response = await fetch(`http://localhost:8080/user/my-tasks/${parsedProfile._id}`, { method: 'GET' })
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}user/my-tasks/${parsedProfile._id}`, { method: 'GET' })
             if (!response.ok) {
                 toast.error("Unable to get tasks")
             } else {
@@ -19,7 +19,7 @@ function page() {
             }
         }
         const profile =Cookies.get("userProfile")
-        if (profile) {
+        if (!!profile) {
             fetchMyTasks()
         } else {
             toast.error("Couldn't find the user")
