@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addTaskCall } from '@/redux/Slices/TaskSlice';
 import DropDown from './DropDown';
 import { fetchAllUsers, getAllUsers } from '@/redux/Slices/UserSlice';
-import { addProjectUser } from '@/redux/Slices/ProjectSlice';
+import { addProjectUser, fetchProjectUser } from '@/redux/Slices/ProjectSlice';
 
 function CreateTask({ projectId }) {
     const [task, setTask] = useState({
@@ -16,14 +16,20 @@ function CreateTask({ projectId }) {
     const users = useSelector(getAllUsers) || []
     const [userToAdd, setUserToAdd] = useState('Add User')
     const dispatch = useDispatch()
+    const projectStatus = useSelector((state) => (state?.projectReducer?.projectUsersStatus))
 
+    useEffect(() => {
+        if (projectStatus === "pending") {
+            dispatch(fetchProjectUser(projectId))
+        }
+    }, [projectStatus])
     useEffect(() => {
         dispatch(fetchAllUsers())
     }, [])
 
-    // const addTheUser = () => {
-    //     dispatch(addProjectUser({ userId: userToAdd, projectId: projectId }))
-    // }
+    const addTheUser = () => {
+        dispatch(addProjectUser({ userId: userToAdd, projectId: projectId }))
+    }
 
 
     const handleOnSubmit = (e) => {
@@ -54,10 +60,13 @@ function CreateTask({ projectId }) {
                     Create Task
                 </button>
             </form>
-            <div className='flex items-center justify-center'>
-                <DropDown value={userToAdd} setValue={setUserToAdd} Useroptions={users} label={'Select Task priority'}  />
+            <div className='flex items-center justify-center '>
+                <div className='w-72 mr-5'>
+                    <DropDown value={userToAdd} setValue={setUserToAdd} Useroptions={users} label={'Select user'} />
+
+                </div>
                 <button
-                    // onClick={addTheUser}
+                    onClick={addTheUser}
                     className='bg-black rounded-full w-40 h-14 text-white text-xl'
                 >
                     Add a User

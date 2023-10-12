@@ -5,7 +5,8 @@ const initialState = {
     projects: [],
     tasks: [],
     users: [],
-    status: ''
+    status: '',
+    projectUsersStatus:''
 }
 export const fetchAllProjects = createAsyncThunk('/projects/fetchProjects', async (payload, thunkAPI) => {
     try {
@@ -93,59 +94,58 @@ export const ProjectSlice = createSlice({
         builder.addCase(fetchAllProjects.pending, (state, action) => {
             state.status = "pending"
         }),
-        builder.addCase(fetchAllProjects.fulfilled, (state, action) => {
-            state.status = "fulfilled"
-            state.projects = action.payload || []
-        }),
-        builder.addCase(fetchAllProjects.rejected, (state, action) => {
-            state.status = "rejected"
-        }),
-        builder.addCase(addProject.pending, (state, action) => {
-            state.status = "pending"
-        }),
-        builder.addCase(addProject.fulfilled, (state, action) => {
-            state.status = "fulfilled"
-            const tempProjects = [...state.projects]
-            tempProjects.push(action.payload)
-            state.projects = tempProjects
+            builder.addCase(fetchAllProjects.fulfilled, (state, action) => {
+                state.status = "fulfilled"
+                state.projects = action.payload || []
+            }),
+            builder.addCase(fetchAllProjects.rejected, (state, action) => {
+                state.status = "rejected"
+            }),
+            builder.addCase(addProject.pending, (state, action) => {
+                state.status = "pending"
+            }),
+            builder.addCase(addProject.fulfilled, (state, action) => {
+                state.status = "fulfilled"
+                const tempProjects = [...state.projects]
+                tempProjects.push(action.payload)
+                state.projects = tempProjects
 
-        }),
-        builder.addCase(addProject.rejected, (state, action) => {
-            state.status = "rejected"
-        })
+            }),
+            builder.addCase(addProject.rejected, (state, action) => {
+                state.status = "rejected"
+            })
         builder.addCase(fetchProjectTasks.pending, (state, action) => {
             state.status = "pending"
         }),
-        builder.addCase(fetchProjectTasks.fulfilled, (state, action) => {
-            state.status = "fulfilled"
-            state.tasks = action.payload || []
-        }),
-        builder.addCase(fetchProjectTasks.rejected, (state, action) => {
-            state.status = "rejected"
-        }),
-        builder.addCase(fetchProjectUser.pending, (state, action) => {
-            state.status = "pending"
-        }),
-        builder.addCase(fetchProjectUser.fulfilled, (state, action) => {
-            state.status = "fulfilled"
-            state.users = action.payload || []
-        }),
-        builder.addCase(fetchProjectUser.rejected, (state, action) => {
-            state.status = "rejected"
-        }),
-        builder.addCase(addProjectUser.pending, (state, action) => {
-            state.status = "pending"
-        }),
-        builder.addCase(addProjectUser.fulfilled, (state, action) => {
-           const project = action?.payload
-           console.log("Projuect is ", project);
-        //    if(!!project?._id){
-        //     state.users = [...project?.users]
-        //    }
-        }),
-        builder.addCase(addProjectUser.rejected, (state, action) => {
-            state.status = "rejected"
-        })
+            builder.addCase(fetchProjectTasks.fulfilled, (state, action) => {
+                state.status = "fulfilled"
+                state.tasks = action.payload || []
+            }),
+            builder.addCase(fetchProjectTasks.rejected, (state, action) => {
+                state.status = "rejected"
+            }),
+            builder.addCase(fetchProjectUser.pending, (state, action) => {
+                state.status = "pending"
+            }),
+            builder.addCase(fetchProjectUser.fulfilled, (state, action) => {
+                state.status = "fulfilled"
+                state.projectUsersStatus = "fulfilled"
+                state.users = action.payload || []
+            }),
+            builder.addCase(fetchProjectUser.rejected, (state, action) => {
+                state.status = "rejected"
+            }),
+            builder.addCase(addProjectUser.pending, (state, action) => {
+                state.status = "pending"
+            }),
+            builder.addCase(addProjectUser.fulfilled, (state, action) => {
+                const project = action?.payload
+                state.status = "fulfilled"
+                state.projectUsersStatus = "pending"
+            }),
+            builder.addCase(addProjectUser.rejected, (state, action) => {
+                state.status = "rejected"
+            })
     }
 })
 
