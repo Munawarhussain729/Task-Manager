@@ -4,8 +4,9 @@ import { GoProjectSymlink } from 'react-icons/go'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux';
 import { addProject, getAllProjects } from '@/redux/Slices/ProjectSlice';
+import Link from 'next/link';
 
-export default function Collapsable({ title,  setSubTitles }) {
+export default function Collapsable({ title }) {
     const [expand, setExpand] = useState(false);
     const [add, setAdd] = useState(false);
     const [newTitle, setNewTitle] = useState('');
@@ -25,7 +26,7 @@ export default function Collapsable({ title,  setSubTitles }) {
     return (
         <div>
             <motion.header
-                initial={false}
+            initial={false}
             >
                 <div className={`flex items-center  justify-between ${expand ? ' hover:bg-slate-900 hover:text-slate-300 text-slate-900 bg-slate-300 rounded-t-lg' : 'hover:bg-slate-300 hover:text-slate-900 text-slate-300 rounded-lg'}  mt-2 cursor-pointer text-lg transition-all p-3  ease-in-out
                         transform-gpu`}>
@@ -70,12 +71,12 @@ export default function Collapsable({ title,  setSubTitles }) {
                             <motion.div
                                 variants={{ collapsed: { scale: 0.8 }, open: { scale: 1 } }}
                                 transition={{ duration: 0.8 }}
-                                className='bg-slate-300 rounded-lg p-1 h-full max-h-[50vh]'
+                                className='bg-slate-300 rounded-lg p-1 h-full max-h-[50vh] flex flex-col'
                                 style={{ overflowY: 'auto' }}
                             >
                                 {subtitles?.map((item, index) => (
-                                    <h3 className='mb-4 mt-2 text-lg text-slate-900 p-2 rounded-lg hover:bg-slate-900 hover:text-slate-300 transition-all'
-                                        key={index}>{item?.title}</h3>
+                                    <Link href={`/dashboard/project-tasks/${item._id}`} className='mb-4 mt-2 text-lg text-slate-900 p-2 rounded-lg hover:bg-slate-900 hover:text-slate-300 transition-all'
+                                        key={index}>{item?.title}</Link>
                                 ))}
                             </motion.div>
                         </motion.section>

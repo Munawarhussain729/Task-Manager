@@ -3,27 +3,26 @@ import CreateTask from '@/components/CreateTask'
 import ListTasks from '@/components/ListTasks'
 import Spinner from '@/components/Spinner';
 import React, { useEffect, useState } from 'react'
+import { MdCelebration } from 'react-icons/md'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchTasks, getAllTasks } from '@/redux/Slices/TaskSlice';
-import { fetchAllProjects } from '@/redux/Slices/ProjectSlice';
+import { fetchProjectTasks, fetchProjectUser, getProjectTasks } from '@/redux/Slices/ProjectSlice';
 
-function TasksHome() {
-  const [tasks, setTasks] = useState([])
+function TasksHome({ projectId }) {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch()
-  const reduxTasks = useSelector(getAllTasks)
+  const reduxTasks = useSelector(getProjectTasks)
 
 
 
   useEffect(() => {
     const fetchTasksTimeout = setTimeout(() => {
       setLoading(false);
-    }, 50000); // 50 seconds in milliseconds
+    }, 100000); // 50 seconds in milliseconds
 
-    dispatch(fetchTasks())
+    dispatch(fetchProjectTasks(projectId))
       .then(() => {
         clearTimeout(fetchTasksTimeout);
         setLoading(false);
@@ -41,7 +40,7 @@ function TasksHome() {
   }, [])
 
   useEffect(() => {
-    dispatch(fetchAllProjects())
+    dispatch(fetchProjectUser(projectId))
   }, [])
 
   return (
@@ -50,13 +49,16 @@ function TasksHome() {
         <Spinner />
       ) : (
         <div className='w-full rounded-lg min-h-[90vh] flex flex-col items-center bg-slate-700 text-white'>
+          <CreateTask projectId={projectId} />
           {reduxTasks.length > 0 ? (
             <>
-              <CreateTask />
-              <ListTasks />
+              <ListTasks  />
             </>
           ) : (
-            <p>No tasks found</p>
+            <div className=' min-h-[90vh] w-full flex justify-center items-center'>
+              <p className='text-2xl font-semibold ml-10 mt-2'>No tasks found</p>
+              <MdCelebration size={40} color='white' />
+            </div>
           )}
         </div>
       )}

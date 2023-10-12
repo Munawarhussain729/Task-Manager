@@ -5,13 +5,12 @@ import { MdCancel } from 'react-icons/md'
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, getAllTasks, updateTask } from '@/redux/Slices/TaskSlice';
-import { fetchAllUsers, getAllUsers } from '@/redux/Slices/UserSlice';
+import {  getProjectTasks, getProjectUsers } from '@/redux/Slices/ProjectSlice';
 
 function ListTasks() {
     const [todos, setTodos] = useState([])
     const [inProgress, setInProgress] = useState([])
     const [closed, setclosed] = useState([])
-    // const [allUsers, setAllUsers] = useState([])
     const [dateValue, setDateValue] = useState(new Date());
     const [priority, setPriority] = useState('')
     const [description, setDescription] = useState('')
@@ -19,9 +18,9 @@ function ListTasks() {
     const [selectedTask, setSelectedTask] = useState(null)
     const textAreaRef = useRef(null)
 
-    const tasks = useSelector(getAllTasks)
+    const tasks = useSelector(getProjectTasks)
     const dispatch = useDispatch()
-    const allUsers = useSelector(getAllUsers)
+    const allUsers = useSelector(getProjectUsers)
     const handleDateChange = newValue => {
         setDateValue(newValue);
     };
@@ -68,10 +67,7 @@ function ListTasks() {
         }
     }, [selectedTask])
 
-    useEffect(() => {
-        dispatch(fetchAllUsers())
-    }, [])
-
+ 
     const handleSaveClick = async (taskId) => {
         try {
             const detailObject = {

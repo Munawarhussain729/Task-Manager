@@ -1,17 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addTaskCall } from '@/redux/Slices/TaskSlice';
+import DropDown from './DropDown';
+import { fetchAllUsers, getAllUsers } from '@/redux/Slices/UserSlice';
+import { addProjectUser } from '@/redux/Slices/ProjectSlice';
 
-function CreateTask() {
+function CreateTask({ projectId }) {
     const [task, setTask] = useState({
         id: "",
         name: "",
         status: "toDo"
     })
-
+    const users = useSelector(getAllUsers) || []
+    const [userToAdd, setUserToAdd] = useState('Add User')
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchAllUsers())
+    }, [])
+
+    // const addTheUser = () => {
+    //     dispatch(addProjectUser({ userId: userToAdd, projectId: projectId }))
+    // }
+
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
@@ -24,7 +37,7 @@ function CreateTask() {
         setTask({ id: '', name: '', status: 'toDo' })
     }
     return (
-        <div className='container'>
+        <div className='container flex justify-between'>
             <form
                 onSubmit={handleOnSubmit}
                 className='flex items-center justify-center'>
@@ -41,8 +54,18 @@ function CreateTask() {
                     Create Task
                 </button>
             </form>
+            <div className='flex items-center justify-center'>
+                <DropDown value={userToAdd} setValue={setUserToAdd} Useroptions={users} label={'Select Task priority'}  />
+                <button
+                    // onClick={addTheUser}
+                    className='bg-black rounded-full w-40 h-14 text-white text-xl'
+                >
+                    Add a User
+                </button>
+            </div>
         </div>
     )
 }
 
 export default CreateTask
+
