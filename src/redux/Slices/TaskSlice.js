@@ -152,6 +152,7 @@ export const taskSlice = createSlice({
             state.status = 'loading'
         })
         builder.addCase(updateTaskStatus.fulfilled, (state, action) => {
+            console.log();
             const indexToUpdate = state.tasks.findIndex(item => item?._id === action?.payload?._id);
             if (indexToUpdate !== -1) {
                 state.tasks[indexToUpdate] = action.payload;

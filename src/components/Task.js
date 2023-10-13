@@ -1,23 +1,25 @@
+import { RemoveProjectTask, getProjectTasks, removeProjectTasks } from '@/redux/Slices/ProjectSlice'
 import { RemoveTask, getAllTasks } from '@/redux/Slices/TaskSlice'
 import React from 'react'
 import { useDrag } from 'react-dnd'
 import { IoMdRemoveCircleOutline } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-function Task({ task, setSelectedTask }) {
+function Task({ task, setSelectedTask, projectId }) {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "task",
         item: { _id: task._id },
-        collect: (monitor) => ({
+        collect: (monitor) => {
+            console.log("Selected Id ", task._id );
+            return {
             isDragging: !!monitor.isDragging()
-        })
+        }}
     }))
-    const tasks = useSelector(getAllTasks)
     const dispatch = useDispatch()
 
 
     const handleRemove = () => {
-        dispatch(RemoveTask(task._id))
+        dispatch(RemoveProjectTask({taskId: task._id, projectId:projectId}))
         toast.success("Task removed")
     }
     return (

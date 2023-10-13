@@ -6,7 +6,10 @@ const initialState = {
     tasks: [],
     users: [],
     status: '',
-    projectUsersStatus:''
+    taskUpdate: false,
+    removeTask: false,
+    taskStatus: false,
+    projectUsersStatus: ''
 }
 export const fetchAllProjects = createAsyncThunk('/projects/fetchProjects', async (payload, thunkAPI) => {
     try {
@@ -16,6 +19,25 @@ export const fetchAllProjects = createAsyncThunk('/projects/fetchProjects', asyn
         }
         const data = await response.json()
         return data?.projects
+    } catch (error) {
+        return error
+    }
+})
+export const updateProjectTaskStatus = createAsyncThunk('/task/updateTaskStatus', async (payload, thunkAPI) => {
+    try {
+        const response =
+            await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}task/udpate-status`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                },
+            )
+
+        const data = await response.json();
+        return data?.updatedTask
     } catch (error) {
         return error
     }
@@ -36,6 +58,46 @@ export const addProject = createAsyncThunk('/projects/addProject', async (payloa
         }
         const data = await response.json()
         return data?.project
+    } catch (error) {
+        return error
+    }
+})
+
+export const addProjectTask = createAsyncThunk('/projects/addTask', async (payload, thunkAPI) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}project/add-task`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+        if (!response.ok) {
+            return []
+        }
+        const data = await response.json()
+        return data?.project
+    } catch (error) {
+        return error
+    }
+})
+
+export const RemoveProjectTask = createAsyncThunk('/projects/removeTask', async (payload, thunkAPI) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}project/remove-task`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+        if (!response.ok) {
+            return []
+        }
+        const data = await response.json()
+        return data
     } catch (error) {
         return error
     }
@@ -120,6 +182,8 @@ export const ProjectSlice = createSlice({
             builder.addCase(fetchProjectTasks.fulfilled, (state, action) => {
                 state.status = "fulfilled"
                 state.tasks = action.payload || []
+                state.taskUpdate = false
+                state.removeTask = false
             }),
             builder.addCase(fetchProjectTasks.rejected, (state, action) => {
                 state.status = "rejected"
@@ -146,10 +210,46 @@ export const ProjectSlice = createSlice({
             builder.addCase(addProjectUser.rejected, (state, action) => {
                 state.status = "rejected"
             })
+        builder.addCase(updateProjectTaskStatus.pending, (state, action) => {
+            state.status = 'loading'
+        })
+        builder.addCase(updateProjectTaskStatus.fulfilled, (state, action) => {
+            const indexToUpdate = state.tasks.findIndex(item => item?._id === action?.payload?._id);
+            state.taskUpdate = true;
+            state.status = 'succeeded';
+        })
+        builder.addCase(updateProjectTaskStatus.rejected, (state, action) => {
+            state.status = 'rejected'
+        })
+        builder.addCase(addProjectTask.pending, (state, action) => {
+            state.status = 'loading'
+        })
+        builder.addCase(addProjectTask.fulfilled, (state, action) => {
+            if (action?.payload?.tasks) {
+                state.taskUpdate = true
+            }
+            state.status = 'succeeded';
+        })
+        builder.addCase(addProjectTask.rejected, (state, action) => {
+            state.status = 'rejected'
+        })
+        builder.addCase(RemoveProjectTask.pending, (state, action) => {
+            state.status = 'loading'
+        })
+        builder.addCase(RemoveProjectTask.fulfilled, (state, action) => {
+            state.status = 'succeeded';
+            state.removeTask = true
+        })
+        builder.addCase(RemoveProjectTask.rejected, (state, action) => {
+            state.status = 'rejected'
+        })
+
     }
 })
 
 export const getProjectUsers = (state) => (state.projectReducer.users)
 export const getProjectTasks = (state) => (state.projectReducer.tasks)
+export const removeProjectTasks = (state) => (state.projectReducer.removeTask)
+export const getProjectTaskUpdate = (state) => (state.projectReducer.taskUpdate)
 export const getAllProjects = (state) => (state.projectReducer.projects)
 export default ProjectSlice.reducer

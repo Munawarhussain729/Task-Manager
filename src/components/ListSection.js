@@ -3,20 +3,24 @@ import Task from "./Task"
 import { toast } from "react-toastify"
 import { useDispatch, useSelector } from "react-redux"
 import {  getAllTasks, updateTaskStatus } from "@/redux/Slices/TaskSlice"
+import { getProjectTasks, updateProjectTaskStatus } from "@/redux/Slices/ProjectSlice"
 
 
-const ListSection = ({ status, todos, inProgress, closed, setSelectedTask }) => {
+const ListSection = ({ status, todos, inProgress, closed, setSelectedTask, projectId }) => {
     let text = "ToDo"
     let background = "bg-slate-500"
     let tasksToMap = todos
     const dispatch = useDispatch()
-    const tasks = useSelector(getAllTasks)
+    const tasks = useSelector(getProjectTasks)
 
     const UpdateItemPriority = async (taskId, taskStatus) => {
-        dispatch(updateTaskStatus({ _id: taskId, status: taskStatus }))
+        dispatch(updateProjectTaskStatus({ _id: taskId, status: taskStatus }))
     }
     const addItemToSection = (id) => {
+        console.log("Taska are ", tasks);
         const mTasks = tasks.map((t) => {
+                // console.log("Task id ", t);
+                console.log("Drooped one is ", id);
                 if (t._id === id) {
                     UpdateItemPriority(id, status)
                     return { ...t, status, status: status }
@@ -51,7 +55,7 @@ const ListSection = ({ status, todos, inProgress, closed, setSelectedTask }) => 
                     tasksToMap?.length > 0 && (
                         tasksToMap.map((task, index) => (
                             <div key={index}>
-                                <Task key={task.id} task={task} setSelectedTask={setSelectedTask} />
+                                <Task key={task.id} task={task} setSelectedTask={setSelectedTask} projectId={projectId} />
                             </div>
                         ))
                     )

@@ -5,9 +5,9 @@ import { MdCancel } from 'react-icons/md'
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchTasks, getAllTasks, updateTask } from '@/redux/Slices/TaskSlice';
-import {  getProjectTasks, getProjectUsers } from '@/redux/Slices/ProjectSlice';
+import { getProjectTasks, getProjectUsers } from '@/redux/Slices/ProjectSlice';
 
-function ListTasks() {
+function ListTasks({projectId}) {
     const [todos, setTodos] = useState([])
     const [inProgress, setInProgress] = useState([])
     const [closed, setclosed] = useState([])
@@ -33,15 +33,18 @@ function ListTasks() {
         const newDateStr = `${year}-${month}-${day}`;
         return newDateStr
     }
-
     useEffect(() => {
-        const tempTodos = tasks?.filter((item) => item?.status === "toDo")
-        const tempInProgress = tasks?.filter((item) => item?.status === "inProgress")
-        const tempClosed = tasks?.filter((item) => item?.status === "closed")
-        setTodos(tempTodos)
-        setInProgress(tempInProgress)
-        setclosed(tempClosed)
-    }, [tasks])
+        if (tasks) {
+            const tempTodos = tasks.filter((item) => item.status === 'toDo');
+            const tempInProgress = tasks.filter((item) => item.status === 'inProgress');
+            const tempClosed = tasks.filter((item) => item.status === 'closed');
+            setTodos(tempTodos);
+            setInProgress(tempInProgress);
+            setclosed(tempClosed);
+        }
+    }, [tasks]);
+
+
 
     useEffect(() => {
         textAreaRef.current.style.height = "auto";
@@ -67,7 +70,7 @@ function ListTasks() {
         }
     }, [selectedTask])
 
- 
+
     const handleSaveClick = async (taskId) => {
         try {
             const detailObject = {
@@ -91,6 +94,7 @@ function ListTasks() {
                     <ListSection
                         key={index}
                         status={item}
+                        projectId = {projectId}
                         todos={todos}
                         inProgress={inProgress}
                         closed={closed}
@@ -128,7 +132,7 @@ function ListTasks() {
                 <div className='flex items-center flex-wrap w-full md:w-1/2 my-5'>
                     <p className='m-0 md:mr-4'>Task priority:</p>
                     <div className='flex-1'>
-                        <DropDown value={priority|| ''} setValue={setPriority} options={['High', 'medium', 'low']} label={'Select Task priority'} />
+                        <DropDown value={priority || ''} setValue={setPriority} options={['High', 'medium', 'low']} label={'Select Task priority'} />
                     </div>
                 </div>
                 <div >

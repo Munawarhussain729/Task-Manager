@@ -8,12 +8,14 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchProjectTasks, fetchProjectUser, getProjectTasks } from '@/redux/Slices/ProjectSlice';
+import { fetchProjectTasks, fetchProjectUser, getProjectTaskUpdate, getProjectTasks, removeProjectTasks } from '@/redux/Slices/ProjectSlice';
 
 function TasksHome({ projectId }) {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch()
   const reduxTasks = useSelector(getProjectTasks)
+  const TaskUpdate = useSelector(getProjectTaskUpdate)
+  const removeTask = useSelector(removeProjectTasks)
 
 
 
@@ -40,6 +42,12 @@ function TasksHome({ projectId }) {
   }, [])
 
   useEffect(() => {
+    if (TaskUpdate || removeTask) {
+      dispatch(fetchProjectTasks(projectId))
+    }
+  }, [TaskUpdate, removeTask])
+
+  useEffect(() => {
     dispatch(fetchProjectUser(projectId))
   }, [])
 
@@ -52,7 +60,8 @@ function TasksHome({ projectId }) {
           <CreateTask projectId={projectId} />
           {reduxTasks.length > 0 ? (
             <>
-              <ListTasks  />
+              {/* <h1 className='text-white font-7xl'>hey there man</h1> */}
+              <ListTasks projectId={projectId}/>
             </>
           ) : (
             <div className=' min-h-[90vh] w-full flex justify-center items-center'>

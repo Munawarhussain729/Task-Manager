@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid'
 import { useDispatch, useSelector } from 'react-redux'
-import { addTaskCall } from '@/redux/Slices/TaskSlice';
+import { addTaskCall, getAllTasks } from '@/redux/Slices/TaskSlice';
 import DropDown from './DropDown';
 import { fetchAllUsers, getAllUsers } from '@/redux/Slices/UserSlice';
-import { addProjectUser, fetchProjectUser } from '@/redux/Slices/ProjectSlice';
+import { addProjectTask, addProjectUser, fetchProjectUser } from '@/redux/Slices/ProjectSlice';
 
 function CreateTask({ projectId }) {
     const [task, setTask] = useState({
@@ -17,6 +17,7 @@ function CreateTask({ projectId }) {
     const [userToAdd, setUserToAdd] = useState('Add User')
     const dispatch = useDispatch()
     const projectStatus = useSelector((state) => (state?.projectReducer?.projectUsersStatus))
+    const allTasks = useSelector(getAllTasks)
 
     useEffect(() => {
         if (projectStatus === "pending") {
@@ -38,8 +39,8 @@ function CreateTask({ projectId }) {
             toast.error("Ticket length should be greater then 3 character")
             return
         }
-        const taskPayload = { title: task.name };
-        dispatch(addTaskCall(taskPayload))
+        const taskPayload = { title: task.name, projectId:projectId };
+        dispatch(addProjectTask(taskPayload))
         setTask({ id: '', name: '', status: 'toDo' })
     }
     return (
