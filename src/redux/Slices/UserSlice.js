@@ -106,4 +106,5 @@ export const userSlice = createSlice({
 })
 
 export const getAllUsers = (state) => (state?.userReducer?.users)
+export const getUserStatus = (state) => (state?.userReducer?.status)
 export default userSlice.reducer
