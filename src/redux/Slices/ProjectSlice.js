@@ -7,6 +7,7 @@ const initialState = {
     users: [],
     status: '',
     taskUpdate: false,
+    taskStatus:false,
     removeTask: false,
     taskStatus: false,
     projectUsersStatus: ''
@@ -184,6 +185,7 @@ export const ProjectSlice = createSlice({
                 state.tasks = action.payload || []
                 state.taskUpdate = false
                 state.removeTask = false
+                state.taskStatus = false 
             }),
             builder.addCase(fetchProjectTasks.rejected, (state, action) => {
                 state.status = "rejected"
@@ -215,7 +217,7 @@ export const ProjectSlice = createSlice({
         })
         builder.addCase(updateProjectTaskStatus.fulfilled, (state, action) => {
             const indexToUpdate = state.tasks.findIndex(item => item?._id === action?.payload?._id);
-            state.taskUpdate = true;
+            state.taskStatus = true;
             state.status = 'succeeded';
         })
         builder.addCase(updateProjectTaskStatus.rejected, (state, action) => {
@@ -252,4 +254,5 @@ export const getProjectTasks = (state) => (state.projectReducer.tasks)
 export const removeProjectTasks = (state) => (state.projectReducer.removeTask)
 export const getProjectTaskUpdate = (state) => (state.projectReducer.taskUpdate)
 export const getAllProjects = (state) => (state.projectReducer.projects)
+export const getTaskStatus  =(state)=> (state.projectReducer.taskStatus)
 export default ProjectSlice.reducer

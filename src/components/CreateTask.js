@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addTaskCall, getAllTasks } from '@/redux/Slices/TaskSlice';
 import DropDown from './DropDown';
 import { fetchAllUsers, getAllUsers } from '@/redux/Slices/UserSlice';
-import { addProjectTask, addProjectUser, fetchProjectUser } from '@/redux/Slices/ProjectSlice';
+import { addProjectTask, addProjectUser, fetchProjectTasks, fetchProjectUser, getProjectTaskUpdate } from '@/redux/Slices/ProjectSlice';
 
 function CreateTask({ projectId }) {
     const [task, setTask] = useState({
@@ -30,8 +30,8 @@ function CreateTask({ projectId }) {
 
     const addTheUser = () => {
         dispatch(addProjectUser({ userId: userToAdd, projectId: projectId }))
+        setUserToAdd('')
     }
-
 
     const handleOnSubmit = (e) => {
         e.preventDefault();

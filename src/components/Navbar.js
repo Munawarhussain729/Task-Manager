@@ -5,7 +5,9 @@ import ProfileImage from '../../public/transparent_profile_photo.webp'
 import Cookies from 'js-cookie';
 import { AiFillEdit, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { useDispatch } from 'react-redux';
-import { updateUserProfile } from '@/redux/Slices/UserSlice';
+import { getUserStatus, updateUserProfile } from '@/redux/Slices/UserSlice';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 function Navbar({ showSideBar, setSideBar }) {
     const [name, setName] = useState('');
@@ -13,6 +15,7 @@ function Navbar({ showSideBar, setSideBar }) {
     const modalRef = useRef(null);
     const [show, setShow] = useState(false)
     const [userId, setUserId] = useState('')
+    const userStatus =  useSelector(getUserStatus)
     const [editInput, setEditInput] = useState({
         name: '',
         email: '',
@@ -36,6 +39,11 @@ function Navbar({ showSideBar, setSideBar }) {
         }
 
     }
+    useEffect(()=>{
+        if(userStatus==="fulfilled"){
+            toast.success("User updated succesfullly ")
+        }
+    },[userStatus])
     useEffect(() => {
         setInputs()
     }, []);

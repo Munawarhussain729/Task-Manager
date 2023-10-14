@@ -3,7 +3,8 @@ import Task from "./Task"
 import { toast } from "react-toastify"
 import { useDispatch, useSelector } from "react-redux"
 import {  getAllTasks, updateTaskStatus } from "@/redux/Slices/TaskSlice"
-import { getProjectTasks, updateProjectTaskStatus } from "@/redux/Slices/ProjectSlice"
+import { fetchProjectTasks, getProjectTasks, getTaskStatus, updateProjectTaskStatus } from "@/redux/Slices/ProjectSlice"
+import { useEffect } from "react"
 
 
 const ListSection = ({ status, todos, inProgress, closed, setSelectedTask, projectId }) => {
@@ -12,10 +13,13 @@ const ListSection = ({ status, todos, inProgress, closed, setSelectedTask, proje
     let tasksToMap = todos
     const dispatch = useDispatch()
     const tasks = useSelector(getProjectTasks)
+    const taskStatus = useSelector(getTaskStatus)
 
     const UpdateItemPriority = async (taskId, taskStatus) => {
+        
         dispatch(updateProjectTaskStatus({ _id: taskId, status: taskStatus }))
     }
+
     const addItemToSection = (id) => {
         console.log("Taska are ", tasks);
         const mTasks = tasks.map((t) => {
@@ -46,6 +50,12 @@ const ListSection = ({ status, todos, inProgress, closed, setSelectedTask, proje
         background = "bg-green-600"
         tasksToMap = closed
     }
+
+    useEffect(()=>{
+        if(taskStatus){
+            dispatch(fetchProjectTasks(projectId))
+        }
+    },[taskStatus])
 
     return (
         <>

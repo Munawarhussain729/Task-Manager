@@ -16,6 +16,9 @@ function TasksHome({ projectId }) {
   const reduxTasks = useSelector(getProjectTasks)
   const TaskUpdate = useSelector(getProjectTaskUpdate)
   const removeTask = useSelector(removeProjectTasks)
+  const handleReload = () => {
+    setReloadKey(reloadKey + 1); // Increment the key to trigger a reload
+};
 
 
 
