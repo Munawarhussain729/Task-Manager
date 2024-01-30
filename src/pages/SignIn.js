@@ -69,6 +69,7 @@ function SignIn() {
             } else {
                 const data = await response.json()
                 toast.success("User login Successful")
+                console.log(" user data sotring is ", data);
                 router.push('/dashboard/home')
                 Cookies.set("userProfile", JSON.stringify(data?.userProfile))
                 // localStorage.setItem('userProfile', JSON.stringify(data?.userProfile))

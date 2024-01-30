@@ -1,3 +1,4 @@
+"use client"
 import { useDrop } from "react-dnd"
 import Task from "./Task"
 import { toast } from "react-toastify"

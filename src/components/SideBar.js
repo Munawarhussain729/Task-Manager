@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from 'react'
 import { IoCheckmarkDoneCircleOutline } from 'react-icons/io5'
 import { AiOutlineHome } from 'react-icons/ai'

@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import ListSection from './ListSection'
 import DropDown from './DropDown';

@@ -58,6 +58,7 @@ export const validateGoogleUser = createAsyncThunk('/user/validate-google-user',
             return {}
         }
         const data = await response.json()
+        console.log("user data storing is ",data);
         Cookies.set('userProfile', JSON.stringify(data.user[0]))
         return data?.user[0]
     } catch (error) {

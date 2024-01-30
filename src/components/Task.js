@@ -1,3 +1,4 @@
+"use client"
 import { RemoveProjectTask, getProjectTasks, removeProjectTasks } from '@/redux/Slices/ProjectSlice'
 import { RemoveTask, getAllTasks } from '@/redux/Slices/TaskSlice'
 import React from 'react'
